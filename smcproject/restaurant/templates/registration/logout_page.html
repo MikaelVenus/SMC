@@ -9,10 +9,14 @@
     <title>Logout Confirmation</title>
 </head>
 <body>
-    <h1>Logout Confirmation</h1>
-    <p>{{ message }}</p>
-    <!-- Additional content or messages here -->
-    <p> Login Again by Click</p><a href="{% url 'login' %}">login</a>
+    <div class="row justify-content-center">
+        <div class="col-11">
+            <h1>Logout Confirmation</h1>
+            <p>{{ message }}</p>
+            <!-- Additional content or messages here -->
+            <p> Login Again by Click</p><a href="{% url 'login' %}">login</a>
+        </div>
+    </div>
 </body>
 </html>
 {% endblock %}

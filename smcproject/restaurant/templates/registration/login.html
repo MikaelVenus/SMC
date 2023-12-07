@@ -1,5 +1,5 @@
 {% extends 'login_base.html' %}
-
+{% load static %}
 
 {% block content %}
 <!DOCTYPE html>
@@ -10,11 +10,15 @@
     <title>Document</title>
 </head>
 <body>
-    <form method="post">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit"> login</button>
-    </form>
+    <div class="row justify-content-center">
+        <div class="col-11">
+            <form method="post">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <button  class="btn btn-success" type="submit"> log in </button>
+            </form>
+        </div>
+    </div>
 </body>
 </html>
 {% endblock %}

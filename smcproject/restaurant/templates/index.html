@@ -4,45 +4,46 @@
 {% block content %}
 <section>
     <article id="hero">
-      <h1 class="heading_shadow">SPECIAL OFFER</h1>
-      <p>
+      <h1 class="heading_shadow">ระบบขนส่งสินค้าสมานท่าทราย</h1>
+      <!-- <p>
         30% Off This Weekend 
-      </p>
-      <a href="#" class="cta"> Book now </a>
+      </p> -->
+      <!-- <a href="#" class="cta"> เพิ่มรายการ </a> -->
+      <a href="{% url 'book' %}" class="cta"> เพิ่มรายการ </a>
     </article>
   </section>
   <section>
     <article>
-      <h2>Our New Menu</h2>
-      <img src="{% static 'img/grill.jpg' %}">
+      <h2>ตรวจสอบข้อมูล</h2>
       <p>
-        Our menu consists of 12-15 seasonal items based on Italian, Greek, and Turkish culture.
+        ตรวจสอบข้อมูลของรายการที่ได้บันทึกไว้เเล้ว หรือเเก้ไขข้อมูลที่บันทึกผิดพลาด
       </p>
       <p>
-        <a href="{% url 'menu' %}">See our new menu</a>
+        <a href="{% url 'menu' %}">ตรวจสอบเเต่ละรายการ</a>
       </p>
+      <img src="{% static 'img/SM_badge.jpg' %}">
     </article>
     <article>
-      <h2>Book a table</h2>
-      <img src="{% static 'img/salad.jpg' %}">
+      <h2>Dashboard รวมข้อมูล</h2>
       <p>
-        Reserve your table for an Italian, Greek, and Turkish dining experience.
+        ตรวจสอบข้อมูล Transection โดยรวมที่เกิดขึ้นในระบบ
       </p>
       <p>
-        <a href="{% url 'book' %}">Book your table now</a>
+        <a href="{% url 'book' %}">ตรวจสอบรายการรวม</a>
       </p>
+      <img src="{% static 'img/SM_Dashboard.jpg' %}">
     </article>
     <article>
-      <h2>Opening Hours</h2>
-      <img src="{% static 'img/head_chef.jpg' %}">
+      <h2>ข้อมูลเพิ่มเติม</h2>
+      <!-- <img src="{% static 'img/head_chef.jpg' %}"> -->
       <p>
-        The Little Lemon Restaurant is open 7 days a week, except for public holidays. 
+        ในกรณuที่ต้องการความช่วยเหลือโปรดติดต่อ Admin 
       </p>
-      <ul>
+      <!-- <ul>
         <li>Mon - Fri: 2pm - 10pm</li>
         <li>Sat: 2pm - 11pm</li>
         <li>Sun: 2pm - 9pm</li>
-      </ul>
+      </ul> -->
     </article>
   </section>
 {% endblock %}

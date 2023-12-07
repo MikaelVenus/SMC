@@ -1,9 +1,11 @@
 {% load static %}
-<footer>
-  <article>
-    <img src="{% static 'img/logo_SMsmall.png' %}" />
-  </article>
-  <article>
-    <p>Copyright SM Sand</p>
-  </article>
+<footer style="display: block;">
+  <div style="display: flex; justify-content: space-between;">
+    <div style="width: 50%;">
+      <img src="{% static 'img/logo_SMsmall.png' %}" class="img-fluid" alt="Logo">
+    </div>
+    <div style="width: 50%; text-align: right;">
+      <p>Copyright SM Sand</p>
+    </div>
+  </div>
 </footer>
