@@ -1,5 +1,5 @@
 # from django.http import HttpResponse
-from django.shortcuts import render
+from django.shortcuts import redirect, render
 from .forms import BookingForm
 from .models import Menu
 from django.core import serializers
@@ -8,6 +8,20 @@ from datetime import datetime
 import json
 from django.views.decorators.csrf import csrf_exempt
 from django.http import HttpResponse
+from django.contrib.auth.views import LoginView
+from django.contrib.auth import logout
+
+# for login
+def custom_login(request):
+    return LoginView.as_view()(request)
+
+def custom_logout(request):
+    logout(request)
+    context = {
+        'message': 'You have been logged out successfully.'  # Example message
+    }
+    return render(request, 'registration/logout_page.html', context)
+
 
 
 # Create your views here.
