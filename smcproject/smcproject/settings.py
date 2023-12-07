@@ -41,7 +41,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     # The settings for app updated for the Graded assessment
-    'restaurant',
+    # 'restaurant',
+    'account',
 ]
 
 MIDDLEWARE = [
@@ -60,7 +61,7 @@ TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         # The settings for templates updated for the Graded assessment
-        'DIRS': ['restaurant/templates' ],
+        'DIRS': ['account/templates' ],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -128,10 +129,10 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.1/howto/static-files/
 
 # The settings for static files have been updated for the Graded assessment
-STATIC_URL = 'restaurant/static/'
+STATIC_URL = 'account/static/'
 
 STATICFILES_DIRS = [
-    "restaurant/static",
+    "account/static",
 ]
 
 # Default primary key field type
