@@ -3,7 +3,7 @@ from django.shortcuts import redirect, render
 from .forms import BookingForm, OrderForm
 from .models import Menu
 from django.core import serializers
-from .models import Booking, Order_Transection
+from .models import Booking, Order_Transection, Location,Supplier,Customer
 from datetime import datetime
 import json
 from django.views.decorators.csrf import csrf_exempt
@@ -53,6 +53,20 @@ def orderitem(request):
             form.save()
     context = {'form':form}
     return render(request, 'orderitem.html', context)
+
+def orderitemviews(request):
+    dropdownitem = []
+    location_data = Location.objects.all()
+
+    # Create a dictionary for each Location object and append it to dropdownitem
+    for location in location_data:
+        location_dict = {
+            'id': location.location_id,
+            'name': location.name
+        }
+        dropdownitem.append(location_dict)
+    dropdownitem_json = json.dumps(dropdownitem)
+    return HttpResponse(dropdownitem_json, content_type='application/json')
 
 def about(request):
     return render(request, 'about.html')

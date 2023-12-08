@@ -48,7 +48,6 @@ class Order_Transection(models.Model):
     customer = models.ForeignKey(Customer, on_delete=models.CASCADE, related_name="customer_name")
     supplier = models.ForeignKey(Supplier, on_delete=models.CASCADE, related_name="supplier_name")
     item = models.ForeignKey(Item,  on_delete=models.CASCADE, related_name="item_name")
-
     #Customer part
     target_location = models.ForeignKey(Location,  on_delete=models.CASCADE, related_name="target_location_name")
     receive_phone = models.CharField(max_length=20)
@@ -61,7 +60,6 @@ class Order_Transection(models.Model):
     sale_pay_method = models.CharField(max_length=20, choices=PAY_RECEIVE_METHOD_CHOICES)
     sale_vat_id = models.CharField(max_length=30)
     receive_date = models.DateField()
-
     #Owner Part
     receive_location = models.ForeignKey(Location,  on_delete=models.CASCADE, related_name="receive_location_name")
     q_buy = models.DecimalField(decimal_places=4,max_digits=8)
