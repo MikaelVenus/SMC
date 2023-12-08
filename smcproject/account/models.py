@@ -23,7 +23,7 @@ class Location(models.Model):
     description = models.CharField(max_length=500)
 
     def __str__(self) -> str:
-        return f"{self.supplier_id} : {self.name} : {self.description[:20]}"
+        return f"{self.location_id} : {self.name} : {self.description[:20]}"
     
 class Item(models.Model):
     item_id = models.IntegerField(primary_key=True)
@@ -35,31 +35,48 @@ class Item(models.Model):
         return f"{self.item_id} : {self.name} : {self.description[:20]}"
     
 class Order_Transection(models.Model):
-    
-    #Customer part
-    order_id = models.IntegerField(primary_key=True,max_length=8)
-    customer = models.ForeignKey(Customer, on_delete=models.CASCADE)
-    supplier = models.ForeignKey(Supplier, on_delete=models.CASCADE)
-    item = models.ForeignKey(Item,  on_delete=models.CASCADE)
-    target_location = models.ForeignKey(Location,  on_delete=models.CASCADE)
-    receive_phone = models.IntegerField(max_length=12)
-    delivery_date = models.DateField()
-    delivery_number = models.CharField(max_length=20)
-    receive_name = models.CharField(max_length=100)
-    q_sale = models.DecimalField(decimal_places=4,max_digits=8)
-    sale_price = models.DecimalField(decimal_places=4,max_digits=8)
-    toal_sale_amount = models.DecimalField(decimal_places=4,max_digits=8)
+    #Static
     PAY_RECEIVE_METHOD_CHOICES = [
         ('cash', 'Cash'),
         ('qrscan', 'QR Scan'),
         ('credit', 'Credit'),
         ('check', 'Check'),
     ]
-    # Define receive_method field with choices
-    receive_method = models.CharField(max_length=20, choices=PAY_RECEIVE_METHOD_CHOICES)
-    sale_vat = models.CharField(max_length=30)
-    pay_receive_date = models.DateField()
-    
+
+    #Global part
+    order_id = models.IntegerField(primary_key=True,max_length=8)
+    customer = models.ForeignKey(Customer, on_delete=models.CASCADE, related_name="customer_name")
+    supplier = models.ForeignKey(Supplier, on_delete=models.CASCADE, related_name="supplier_name")
+    item = models.ForeignKey(Item,  on_delete=models.CASCADE, related_name="item_name")
+
+    #Customer part
+    target_location = models.ForeignKey(Location,  on_delete=models.CASCADE, related_name="target_location_name")
+    receive_phone = models.CharField(max_length=20)
+    delivery_date = models.DateField()
+    delivery_number = models.CharField(max_length=20)
+    receive_name = models.CharField(max_length=100)
+    q_sale = models.DecimalField(decimal_places=4,max_digits=8)
+    sale_price = models.DecimalField(decimal_places=4,max_digits=8)
+    total_sale_amount = models.DecimalField(decimal_places=4,max_digits=8)
+    sale_pay_method = models.CharField(max_length=20, choices=PAY_RECEIVE_METHOD_CHOICES)
+    sale_vat_id = models.CharField(max_length=30)
+    receive_date = models.DateField()
+
+    #Owner Part
+    receive_location = models.ForeignKey(Location,  on_delete=models.CASCADE, related_name="receive_location_name")
+    q_buy = models.DecimalField(decimal_places=4,max_digits=8)
+    buy_price = models.DecimalField(decimal_places=4,max_digits=8)
+    delivery_price = models.DecimalField(decimal_places=4,max_digits=8)
+    remark = models.CharField(max_length=500)
+    buy_vat_id =  models.CharField(max_length=30)
+    total_buy_amount = models.DecimalField(decimal_places=4,max_digits=8)
+    buy_pay_method = models.CharField(max_length=20, choices=PAY_RECEIVE_METHOD_CHOICES)
+    pay_date = models.DateField()
+
+    def __str__(self) -> str:
+        return f"{self.order_id} : {self.customer.name}"
+
+
 
 
 
