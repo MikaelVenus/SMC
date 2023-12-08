@@ -1,9 +1,9 @@
 # from django.http import HttpResponse
 from django.shortcuts import redirect, render
-from .forms import BookingForm
+from .forms import BookingForm, OrderForm
 from .models import Menu
 from django.core import serializers
-from .models import Booking
+from .models import Booking, Order_Transection
 from datetime import datetime
 import json
 from django.views.decorators.csrf import csrf_exempt
@@ -45,8 +45,18 @@ def bookings(request):
 def home(request):
     return render(request, 'index.html')
 
+def orderitem(request):
+    form = OrderForm()
+    if request.method == 'POST':
+        form = OrderForm(request.POST)
+        if form.is_valid():
+            form.save()
+    context = {'form':form}
+    return render(request, 'orderitem.html', context)
+
 def about(request):
     return render(request, 'about.html')
+
 
 def reservations(request):
     date = request.GET.get('date',datetime.today().date())

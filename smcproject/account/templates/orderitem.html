@@ -1,0 +1,225 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<section>
+  <article>
+    <h2>เพิ่มรายการจัดส่ง</h2>
+    <!--Begin row-->
+    <div class="row">
+      <!--Begin col-->
+      <div class="column-100">
+          {% csrf_token %}
+          <form method="POST" id="form">
+            <!-- {% csrf_token %} -->
+            <div class="row">
+              <div class="column-npd">
+                <p>
+                  <label for="first_name">นามลูกค้า:</label>
+                  <input type="text" placeholder="Your Name" maxlength="200" required="" id="first_name">
+                </p>
+              </div>
+              <div class="column-npd">
+                <p>
+                  <label for="first_name">เลขที่รายการ(supplier):</label>
+                  <input type="text" placeholder="Your Name" maxlength="200" required="" id="first_name">
+                </p>
+              </div>
+            </div>
+            <div class="row">
+              <div class="column-npd">
+                <p>
+                  <label for="first_name">ผู้ขนส่ง(supplier):</label>
+                  <input type="text" placeholder="Your Name" maxlength="200" required="" id="first_name">
+                </p>
+              </div>
+              <div class="column-npd">
+                <p>
+                  <label for="first_name">วันที่ส่งสินค้า:</label>
+                  <input type="text" placeholder="Your Name" maxlength="200" required="" id="first_name">
+                </p>
+              </div>
+            </div>
+            <div class="row">
+              <div class="column-npd">
+                <p>
+                  <label for="first_name">ชนิดสินค้า:(supplier):</label>
+                  <input type="text" placeholder="Your Name" maxlength="200" required="" id="first_name">
+                </p>
+              </div>
+              <div class="column-npd">
+                <p>
+                  <label for="first_name">ปริมาณที่ขาย(คิว):</label>
+                  <input type="text" placeholder="Your Name" maxlength="200" required="" id="first_name">
+                </p>
+              </div>
+              <div class="column-npd">
+                <p>
+                  <label for="first_name">จำนวนเงินที่ขาย(supplier):</label>
+                  <input type="text" placeholder="Your Name" maxlength="200" required="" id="first_name">
+                </p>
+              </div>
+            </div>
+            <div class="row">
+              <div class="column-npd">
+                <p>
+                  <label for="first_name">เลขที่ใบส่งของ:</label>
+                  <input type="text" placeholder="Your Name" maxlength="200" required="" id="first_name">
+                </p>
+              </div>
+              <div class="column-npd">
+                <p>
+                  <label for="first_name">เลขที่ใบกำกับภาษีขาย:</label>
+                  <input type="text" placeholder="Your Name" maxlength="200" required="" id="first_name">
+                </p>
+              </div>
+            </div>
+            <div class="row">
+              <div class="column-npd">
+                <p>
+                  <label for="first_name">สถานที่จัดส่ง:</label>
+                  <textarea type="text" placeholder="Your Name" maxlength="200" required="" id="first_name"></textarea>
+                </p>
+              </div>
+            </div>
+            <div class="row">
+              <div class="column-npd">
+                <p>
+                  <label for="first_name">ยอดรับเงิน(ขาย):</label>
+                  <input type="text" placeholder="Your Name" maxlength="200" required="" id="first_name">
+                </p>
+              </div>
+              <div class="column-npd">
+                <p>
+                  <label for="first_name">วิธีรับเงิน:</label>
+                  <input type="text" placeholder="Your Name" maxlength="200" required="" id="first_name">
+                </p>
+              </div>
+              <div class="column-npd">
+                <p>
+                  <label for="first_name">วันที่รับเงิน:</label>
+                  <input type="text" placeholder="Your Name" maxlength="200" required="" id="first_name">
+                </p>
+              </div>
+            </div>
+            <div class="row">
+              <div class="column-npd">
+                <p>
+                  <label for="first_name">เบอร์หน้างาน:</label>
+                  <input type="text" placeholder="Your Name" maxlength="200" required="" id="first_name">
+                </p>
+              </div>
+              <div class="column-npd">
+                <p>
+                  <label for="first_name">ผู้รับสินค้า</label>
+                  <input type="text" placeholder="Your Name" maxlength="200" required="" id="first_name">
+                </p>
+              </div>
+            </div>
+          </form>
+      </div>
+      <!--End col-->
+    </div>
+      <!--Begin col-->
+    </div>
+    <!--End row-->
+
+
+
+
+  </article>
+</section>
+<section>
+  <article>
+    <h2>เพิ่มรายการซื้อ</h2>
+    <!--Begin row-->
+    <div class="row">
+      <!--Begin col-->
+      <div class="column">
+          {% csrf_token %}
+          <form method="POST" id="form">
+            <!-- {% csrf_token %} -->
+            <button type="button" id="button">Reserve</button>
+          </form>
+      </div>
+  </article>
+</section>
+<script>
+
+  const date = new Date()
+  document.getElementById('reservation_date').value = `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate().toString().padStart(2, "0")}`
+
+  console.log(document.getElementById('reservation_date').value)
+  getBookings()
+
+
+  /*  Step 10: Part two */
+  let reservation_date = document.getElementById("reservation_date");
+  reservation_date.addEventListener('change', getBookings);
+
+
+  function getBookings() {
+    let reserved_slots = []
+    const date = document.getElementById('reservation_date').value
+    document.getElementById('today').innerHTML = date
+    
+    fetch("{% url 'bookings' %}" + '?date=' + date)
+      .then(r => r.json())
+      .then(data => {
+        reserved_slots = []
+        bookings = ''
+        
+        /* Step 11: Part three */
+        for (let i = 0; i < data.length; i++) {
+            let item = data[i];
+            console.log(item.fields.first_name)
+            reserved_slots.push(item.fields.reservation_slot)
+            bookings = `<p>${item.fields.first_name} - ${formatTime(item.fields.reservation_slot)}</p>`
+        }
+
+        /* Step 12: Part four  */
+        let slot_options = '<option value="0" disabled>Select time</option>'
+        
+        for (let i = 11; i < 20; i++) {
+            let item = data[i];
+            label = formatTime(i)
+            if (reserved_slots.includes(i)){
+              slot_options += `<option value=${i} disabled>${label}</option>`
+            }
+            else {
+              slot_options += `<option value=${i}>${label}</option>`
+            }
+        }
+
+        document.getElementById('reservation_slot').innerHTML = slot_options
+        if(bookings==''){
+          bookings = "No bookings"
+        }
+        document.getElementById('bookings').innerHTML = bookings
+      })
+  }
+
+  function formatTime(time) {
+    const ampm = time < 12 ? 'AM' : 'PM'
+    const t = time < 12 ? time : time > 12 ? time - 12 : time
+    const label = `${t} ${ampm}`
+    return label
+  }
+
+
+  document.getElementById('button').addEventListener('click', function (e) {
+    const formdata = {
+      first_name: document.getElementById('first_name').value,
+      reservation_date: document.getElementById('reservation_date').value,
+      reservation_slot: document.getElementById('reservation_slot').value,
+    }
+
+    fetch("{% url 'bookings' %}", { method: 'post', body: JSON.stringify(formdata) })
+      .then(r => r.text())
+      .then(data => {
+        getBookings()
+      })
+  })
+</script>
+{% endblock %}
+
