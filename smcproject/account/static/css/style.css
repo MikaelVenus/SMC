@@ -94,6 +94,8 @@ section {
 
 article {
     flex:1;
+    padding: 1rem;
+    padding-bottom: 2rem;
 }
 
 article img {
@@ -162,6 +164,18 @@ textarea {
     background-color:#495E57;;
     border-radius: 5px;
     width: 80%;
+    font-size: 1.25rem;
+    display: block;
+    color: #fff;
+    line-height: 25px;
+  }
+
+#reserve_button {
+    padding: .5rem 1rem;
+    border: 1px solid #495E57;
+    background-color:#495E57;;
+    border-radius: 5px;
+    width: 50%;
     font-size: 1.25rem;
     display: block;
     color: #fff;

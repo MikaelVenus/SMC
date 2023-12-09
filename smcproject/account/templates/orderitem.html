@@ -112,13 +112,13 @@
               <div class="column-npd">
                 <p>
                   <label for="first_name">เบอร์หน้างาน:</label>
-                  <input type="text" placeholder="Your Name" maxlength="200" required="" id="first_name">
+                  <input type="text" placeholder="Your Name" maxlength="200" required="" id="receive_phone">
                 </p>
               </div>
               <div class="column-npd">
                 <p>
                   <label for="first_name">ผู้รับสินค้า</label>
-                  <input type="text" placeholder="Your Name" maxlength="200" required="" id="first_name">
+                  <input type="text" placeholder="Your Name" maxlength="200" required="" id="receive_name">
                 </p>
               </div>
             </div>
@@ -240,6 +240,9 @@
       </div>
     </article>
   </section>
+  <section style="display: flex; justify-content: flex-end;">
+    <button type="button" id="reserve_button">Reserve</button>
+  </section>
 </form>
 
 <script>
@@ -258,11 +261,43 @@
 
   });
 
-  // const date = new Date()
-  // document.getElementById('reservation_date').value = `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate().toString().padStart(2, "0")}`
-
-  // console.log(document.getElementById('reservation_date').value)
   getorderitem()
+
+  document.getElementById('reserve_button').addEventListener('click', function (e) {
+    const formdata = {
+      order_id : document.getElementById('order_id').value,
+      customer : document.getElementById('customer').value,
+      supplier : document.getElementById('supplier').value,
+      item : document.getElementById('item').value,
+      target_location : document.getElementById('target_location').value,
+      receive_phone : document.getElementById('receive_phone').value,
+      delivery_date : document.getElementById('delivery_date').value,
+      delivery_number : document.getElementById('delivery_number').value,
+      receive_name : document.getElementById('receive_name').value,
+      q_sale : document.getElementById('q_sale').value,
+      sale_price : document.getElementById('sale_price').value,
+      total_sale_amount : document.getElementById('total_sale_amount').value,
+      sale_pay_method : document.getElementById('sale_pay_method').value,        
+      sale_vat_id : document.getElementById('sale_vat_id').value, 
+      receive_date : document.getElementById('receive_date').value, 
+      receive_location : document.getElementById('receive_location').value, 
+      q_buy : document.getElementById('q_buy').value, 
+      buy_price : document.getElementById('buy_price').value,     
+      delivery_price : document.getElementById('delivery_price').value,     
+      remark : document.getElementById('remark').value,     
+      buy_vat_id : document.getElementById('buy_vat_id').value,     
+      total_buy_amount : document.getElementById('total_buy_amount').value,     
+      buy_pay_method : document.getElementById('buy_pay_method').value,     
+      pay_date : document.getElementById('pay_date').value,     
+    }
+    console.log(formdata)
+
+    fetch("{% url 'ordering' %}", { method: 'post', body: JSON.stringify(formdata) })
+      .then(r => r.text())
+      .then(data => {
+        getorderitem()
+      })
+  })
 
 
   /*  Step 10: Part two */

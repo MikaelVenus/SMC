@@ -60,6 +60,46 @@ def orderitemviews(request):
     dropdownitem_json = json.dumps(get_order_item())
     return HttpResponse(dropdownitem_json, content_type='application/json')
 
+@csrf_exempt
+def ordering(request):
+    if request.method == 'POST':
+        data = json.load(request)
+
+        # date = request.GET.get('date',datetime.today().date())
+        add_item = Order_Transection(
+            order_id = data['order_id'],
+            customer = data['customer'],
+            supplier = data['supplier'],
+            item = data['item'],
+            target_location = data['target_location'],
+            receive_phone = data['receive_phone'],
+            delivery_date = data['delivery_date'],
+            delivery_number = data['delivery_number'],
+            receive_name = data['receive_name'],
+            q_sale = data['q_sale'],
+            sale_price = data['sale_price'],
+            total_sale_amount = data['total_sale_amount'],
+            sale_pay_method = data['sale_pay_method'],        
+            sale_vat_id = data['sale_vat_id'], 
+            receive_date = data['receive_date'], 
+            receive_location = data['receive_location'], 
+            q_buy = data['q_buy'], 
+            buy_price = data['buy_price'],     
+            delivery_price = data['delivery_price'],     
+            remark = data['remark'],     
+            buy_vat_id = data['buy_vat_id'],     
+            total_buy_amount = data['total_buy_amount'],     
+            buy_pay_method = data['buy_pay_method'],     
+            pay_date = data['pay_date'],     
+        )
+        add_item.save()
+
+        
+
+        order_item=Order_Transection.objects.all()
+        order_item_json = serializers.serialize('json', order_item)
+        return HttpResponse(order_item_json, content_type='application/json')
+
 
 def get_order_item():
     location_dict = {}
@@ -114,7 +154,7 @@ def get_order_item():
     formatted_date = current_date.strftime("%y%m%d")
 
     running_order_id =''
-    if formatted_date == max_order_id_str[0:6]:
+    if max_order_id_str and formatted_date == max_order_id_str[:6]:
         running_order_id = str(int(max_order_id_str) + 1)
     else:
         running_order_id = current_date + '001'
