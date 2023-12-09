@@ -5,7 +5,7 @@
 <form method="POST" id="form">
   <section>
     <article>
-      <h2>เพิ่มรายการจัดส่ง</h2>
+      <h2>เพิ่มรายการขาย(จัดส่ง)</h2>
       <!--Begin row-->
       <div class="row">
         <!--Begin col-->
@@ -49,12 +49,12 @@
               <div class="column-npd">
                 <p>
                   <label for="q_sale">ปริมาณที่ขาย(คิว):</label>
-                  <input type="text" placeholder="quality (Q)" maxlength="200" required="" id="q_sale">
+                  <input type="text" placeholder="q sell" maxlength="200" required="" id="q_sale">
                 </p>
               </div>
               <div class="column-npd">
                 <p>
-                  <label for="sale_price">จำนวนเงินที่ขาย(supplier):</label>
+                  <label for="sale_price">จำนวนเงินที่ขาย:</label>
                   <input type="text" placeholder="sale price" maxlength="200" required="" id="sale_price">
                 </p>
               </div>
@@ -98,7 +98,7 @@
               <div class="column-npd">
                 <p>
                   <label for="sale_pay_method">วิธีรับเงิน:</label>
-                  <input type="text" placeholder="sale pay method" maxlength="200" required="" id="sale_pay_method">
+                  <select  id="sale_pay_method"></select>
                 </p>
               </div>
               <div class="column-npd">
@@ -213,7 +213,7 @@
       <div class="row">
         <div class="column-npd">
           <p>
-            <label for="total_buy_amount">ยอดรับเงิน(ซื้อ):</label>
+            <label for="total_buy_amount">ยอดชำระรับเงิน(ซื้อ):</label>
             <input type="text" placeholder="total buy amount" maxlength="200" required="" id="total_buy_amount">
           </p>
         </div>
@@ -276,9 +276,20 @@
       .then(r => r.json())
       .then(data => {
         console.log(data)
+        populateDropdown(data.pay_method, 'sale_pay_method')
         /* Step 11: Part three */        
       })
   }
+
+  function populateDropdown(data, dropdownId) {
+    let dropdown = $('#' + dropdownId);
+    
+    // Loop through the data and append options to the dropdown
+    $.each(data, function(index, item) {
+        dropdown.append($('<option></option>').attr('value', item.id).text(item.name));
+    });
+  }
+
 </script>
 {% endblock %}
 

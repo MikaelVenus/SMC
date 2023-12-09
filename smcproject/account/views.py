@@ -3,7 +3,7 @@ from django.shortcuts import redirect, render
 from .forms import BookingForm, OrderForm
 from .models import Menu
 from django.core import serializers
-from .models import Booking, Order_Transection, Location,Supplier,Customer
+from .models import Booking, Order_Transection, Location,Supplier,Customer, Item
 from datetime import datetime
 import json
 from django.views.decorators.csrf import csrf_exempt
@@ -55,21 +55,83 @@ def orderitem(request):
     return render(request, 'orderitem.html', context)
 
 def orderitemviews(request):
-    dropdownitem = []
-    location_data = Location.objects.all()
 
+    dropdownitem_json = json.dumps(get_order_item())
+    return HttpResponse(dropdownitem_json, content_type='application/json')
+
+
+def get_order_item():
+    location_dict = {}
+    customer_dict = {}
+    item_dict = {}
+    supplier_dict = {}
+    pay_method_dict = {}
+
+    location_data = Location.objects.all()
     # Create a dictionary for each Location object and append it to dropdownitem
     for location in location_data:
-        location_dict = {
-            'id': location.location_id,
-            'name': location.name
+        location_dict[location.location_id] = {
+        'id': location.location_id,
+        'name': location.name
+    }
+
+    customer_data = Customer.objects.all()
+    # Create a dictionary for each Location object and append it to dropdownitem
+    for customer in customer_data:
+        customer_dict[customer.customer_id] = {
+            'id': customer.customer_id,
+            'name': customer.name
         }
-        dropdownitem.append(location_dict)
-    dropdownitem_json = json.dumps(dropdownitem)
-    return HttpResponse(dropdownitem_json, content_type='application/json')
+
+    item_data = Item.objects.all()
+    # Create a dictionary for each Location object and append it to dropdownitem
+    for item in item_data:
+        item_dict[item.item_id] = {
+            'id': item.item_id,
+            'name': item.name
+        }
+    
+    supplier_data = Supplier.objects.all()
+    # Create a dictionary for each Location object and append it to dropdownitem
+    for supplier in supplier_data:
+        supplier_dict[supplier.supplier_id] = {
+            'id': supplier.supplier_id,
+            'name': supplier.name
+        }
+    
+
+    pay_method_dict = dict(Order_Transection.PAY_RECEIVE_METHOD_CHOICES)
+    payment_methods_list = []
+
+    # Convert the payment_methods_dict to a list of dictionaries with 'id' and 'name'
+    for key, value in pay_method_dict.items():
+        payment_methods_list.append({'id': key, 'name': value})
+    
+    orderItemData = {
+        'location': location_dict,
+        'customer': customer_dict,
+        'item' : item_dict, 
+        'pay_method' : payment_methods_list,
+        'supplier' : supplier_dict,
+    }
+
+    return orderItemData
 
 def about(request):
     return render(request, 'about.html')
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 def reservations(request):
