@@ -72,7 +72,7 @@ class Order_Transection(models.Model):
     pay_date = models.DateField()
 
     def __str__(self) -> str:
-        return f"{self.order_id} : {self.customer.nameh}"
+        return f"{self.order_id} : {self.customer.name}"
 
 
 

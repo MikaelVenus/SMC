@@ -10,6 +10,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.http import HttpResponse
 from django.contrib.auth.views import LoginView
 from django.contrib.auth import logout
+from django.db.models import Max
 
 # for login
 def custom_login(request):
@@ -107,12 +108,26 @@ def get_order_item():
     for key, value in pay_method_dict.items():
         payment_methods_list.append({'id': key, 'name': value})
     
+    max_order_id = Order_Transection.objects.aggregate(max_order_id=Max('order_id'))
+    max_order_id_str = str(max_order_id['max_order_id']) if max_order_id['max_order_id'] is not None else ''
+    current_date = datetime.now()
+    formatted_date = current_date.strftime("%y%m%d")
+
+    running_order_id =''
+    if formatted_date == max_order_id_str[0:6]:
+        running_order_id = str(int(max_order_id_str) + 1)
+    else:
+        running_order_id = current_date + '001'
+
     orderItemData = {
         'location': location_dict,
         'customer': customer_dict,
         'item' : item_dict, 
         'pay_method' : payment_methods_list,
         'supplier' : supplier_dict,
+        'order_id' : max_order_id,
+        'formatted_date' : formatted_date,
+        'running_order_id': running_order_id,
     }
 
     return orderItemData

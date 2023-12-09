@@ -17,19 +17,19 @@
               <div class="column-npd">
                 <p>
                   <label for="customer">นามผู้ค้า:</label>
-                  <input type="text" placeholder="customer" maxlength="200" required="" id="customer">
+                  <select id="customer"></select>
                 </p>
               </div>
               <div class="column-npd">
                 <p>
                   <label for="order_id">เลขที่รายการ:</label>
-                  <input type="text" placeholder="order id" maxlength="200" required="" id="order_id">
+                  <input type="text" placeholder="order id" maxlength="200" required="" id="order_id" readonly>
                 </p>
               </div>
               <div class="column-npd">
                 <p>
                   <label for="supplier">ผู้ขนส่ง(supplier):</label>
-                  <input type="text" placeholder="supplier" maxlength="200" required="" id="supplier">
+                  <select id="supplier"></select>
                 </p>
               </div>
             </div>
@@ -43,7 +43,7 @@
               <div class="column-npd">
                 <p>
                   <label for="item">ชนิดสินค้า:</label>
-                  <input type="text" placeholder="item" maxlength="200" required="" id="item">
+                  <select id="item"></select>
                 </p>
               </div>
               <div class="column-npd">
@@ -139,27 +139,27 @@
         <div class="column-npd">
           <p>
             <label for="customer_b">นามผู้ค้า:</label>
-            <input type="text" placeholder="customer" maxlength="200" required="" id="customer_b">
+            <select id="customer_b"></select>
           </p>
         </div>
         <div class="column-npd">
           <p>
             <label for="order_id_b">เลขที่รายการ(supplier):</label>
-            <input type="text" placeholder="order id" maxlength="200" required="" id="order_id_b">
+            <input type="text" placeholder="order id" maxlength="200" required="" id="order_id_b" readonly>
           </p>
         </div>
         <div class="column-npd">
           <p>
             <label for="supplier_b">ผู้ขนส่ง(supplier):</label>
-            <input type="text" placeholder="supplier b" maxlength="200" required="" id="supplier_b">
+            <select  id="supplier_b"></select>
           </p>
         </div>
       </div>
       <div class="row">
         <div class="column-npd">
           <p>
-            <label for="item_b">ชนิดสินค้า:(supplier):</label>
-            <input type="text" placeholder="item" maxlength="200" required="" id="item_b">
+            <label for="item_b">ชนิดสินค้า:</label>
+            <select id="item_b"></select>
           </p>
         </div>
         <div class="column-npd">
@@ -220,7 +220,7 @@
         <div class="column-npd">
           <p>
             <label for="buy_pay_method">วิธีชำระเงิน:</label>
-            <input type="text" placeholder="buy pay method" maxlength="200" required="" id="buy_pay_method">
+            <select  id="buy_pay_method"></select>
           </p>
         </div>
         <div class="column-npd">
@@ -277,7 +277,23 @@
       .then(data => {
         console.log(data)
         populateDropdown(data.pay_method, 'sale_pay_method')
-        /* Step 11: Part three */        
+        populateDropdown(data.pay_method, 'buy_pay_method')
+        populateDropdown(data.customer, 'customer')
+        populateDropdown(data.customer, 'customer_b')
+        populateDropdown(data.item, 'item')
+        populateDropdown(data.item, 'item_b')
+        populateDropdown(data.supplier, 'supplier')
+        populateDropdown(data.supplier, 'supplier_b')
+
+        synchronizeDropdowns('#customer','#customer_b')
+        synchronizeDropdowns('#customer_b','#customer')
+        // synchronizeDropdowns('#supplier','#supplier_b')
+        // synchronizeDropdowns('#supplier_b','#supplier')
+        synchronizeDropdowns('#item','#item_b')
+        synchronizeDropdowns('#item_b','#item')
+
+        $('#order_id').val(data.running_order_id);
+        $('#order_id_b').val(data.running_order_id);
       })
   }
 
@@ -289,6 +305,19 @@
         dropdown.append($('<option></option>').attr('value', item.id).text(item.name));
     });
   }
+
+  function synchronizeDropdowns(sourceId, targetId) {
+    $(sourceId).on('change', function() {
+        var selectedId = $(this).val();
+
+        // Set the selected value in the target dropdown to match the selected value in the source dropdown
+        $(targetId).val(selectedId);
+    });
+
+    // Trigger change event on page load to initialize the target dropdown based on the default value of the source dropdown
+    $(sourceId).trigger('change');
+  }
+
 
 </script>
 {% endblock %}
