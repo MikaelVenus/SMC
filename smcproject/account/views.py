@@ -1,6 +1,6 @@
 # from django.http import HttpResponse
 from django.shortcuts import redirect, render
-from .forms import BookingForm, OrderForm
+from .forms import BookingForm, OrderForm, TransectionForm
 from .models import Menu
 from django.core import serializers
 from .models import Booking, Order_Transection, Location,Supplier,Customer, Item
@@ -105,6 +105,16 @@ def ordering(request):
         order_item=Order_Transection.objects.all()
         order_item_json = serializers.serialize('json', order_item)
         return HttpResponse(order_item_json, content_type='application/json')
+
+
+def transection(request):
+    form = TransectionForm()
+    if request.method == 'POST':
+        form = TransectionForm(request.POST)
+        if form.is_valid():
+            form.save()
+    context = {'form':form}
+    return render(request, 'transection.html', context)
 
 
 def get_order_item():

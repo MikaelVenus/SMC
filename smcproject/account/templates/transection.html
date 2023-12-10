@@ -1,0 +1,240 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<form method="POST" id="form">
+  <section>
+    <article>
+      <h2>รวมรายการจัดส่ง</h2>
+      <!--Begin row-->
+      <div class="row">
+        <!--Begin col-->
+        <div class="column-100">
+            {% csrf_token %}
+            <!-- <form method="POST" id="form"> -->
+              <!-- {% csrf_token %} -->
+            
+            <!-- </form> -->
+        </div>
+        <!--End col-->
+      </div>
+        <!--Begin col-->
+      </div>
+      <!--End row-->
+    </article>
+  </section>
+</form>
+
+<script>
+  $(function() {
+    $("#delivery_date").datepicker({
+      dateFormat: 'dd-mm-yy' // Specify the date format as day-month-year
+    });
+
+    $("#receive_date").datepicker({
+      dateFormat: 'dd-mm-yy' // Specify the date format as day-month-year
+    });
+
+    $("#pay_date").datepicker({
+      dateFormat: 'dd-mm-yy' // Specify the date format as day-month-year
+    });
+
+    getorderitem()
+
+    formatToDecimal('q_sale')
+    formatToDecimal('sale_price')
+    formatToDecimal('total_sale_amount')
+    formatToDecimal('q_buy')
+    formatToDecimal('buy_price')
+    formatToDecimal('delivery_price')
+    formatToDecimal('total_buy_amount')
+  });
+
+
+  document.getElementById('reserve_button').addEventListener('click', function (e) {
+    const formdata = {
+      order_id : document.getElementById('order_id').value,
+      customer : document.getElementById('customer').value,
+      supplier : document.getElementById('supplier').value,
+      item : document.getElementById('item').value,
+      target_location : document.getElementById('target_location').value,
+      receive_phone : document.getElementById('receive_phone').value,
+      delivery_date : document.getElementById('delivery_date').value,
+      delivery_number : document.getElementById('delivery_number').value,
+      receive_name : document.getElementById('receive_name').value,
+      q_sale : document.getElementById('q_sale').value,
+      sale_price : document.getElementById('sale_price').value,
+      total_sale_amount : document.getElementById('total_sale_amount').value,
+      sale_pay_method : document.getElementById('sale_pay_method').value,        
+      sale_vat_id : document.getElementById('sale_vat_id').value, 
+      receive_date : document.getElementById('receive_date').value, 
+      receive_location : document.getElementById('receive_location').value, 
+      q_buy : document.getElementById('q_buy').value, 
+      buy_price : document.getElementById('buy_price').value,     
+      delivery_price : document.getElementById('delivery_price').value,     
+      remark : document.getElementById('remark').value,     
+      buy_vat_id : document.getElementById('buy_vat_id').value,     
+      total_buy_amount : document.getElementById('total_buy_amount').value,     
+      buy_pay_method : document.getElementById('buy_pay_method').value,     
+      pay_date : document.getElementById('pay_date').value,     
+    }
+    console.log(formdata)
+    errormessage=validateForm(formdata); 
+    if (errormessage == ''){
+      fetch("{% url 'ordering' %}", { method: 'post', body: JSON.stringify(formdata) })
+      .then(r => {
+        if (!r.ok) {
+          // Check if the response status is 500 (Internal Server Error)
+          if (r.status === 500) {
+            // Handle the 500 error case here
+            // For example, log the error or perform specific actions
+            console.error("Internal Server Error: ", r.statusText);
+          }
+          // Throw an error to be caught in the next catch block
+          throw new Error('Network response was not ok.');
+        }
+        return r.text();
+      })
+      .then(data => {
+        getorderitem();
+        document.getElementById('successmsg').innerHTML = 'Transection Save';
+        clearData();
+      })
+      .catch(error => {
+        // This catch block will handle any errors thrown in the fetch chain
+        console.error('There was a problem with the fetch operation:', error);
+        getorderitem();
+        // Perform actions if needed when encountering an error
+        // For example, do not clear data if the response status was 500
+        // clearData();
+      });
+        }
+  })
+
+
+  /*  Step 10: Part two */
+  // let reservation_date = document.getElementById("reservation_date");
+  // reservation_date.addEventListener('change', getBookings);
+
+
+  function getorderitem() {
+    
+    fetch("{% url 'orderitemviews' %}")
+      .then(r => r.json())
+      .then(data => {
+        console.log(data)
+        populateDropdown(data.pay_method, 'sale_pay_method')
+        populateDropdown(data.pay_method, 'buy_pay_method')
+        populateDropdown(data.customer, 'customer')
+        populateDropdown(data.customer, 'customer_b')
+        populateDropdown(data.item, 'item')
+        populateDropdown(data.item, 'item_b')
+        populateDropdown(data.supplier, 'supplier')
+        populateDropdown(data.supplier, 'supplier_b')
+        populateDropdown(data.location, 'target_location')
+        populateDropdown(data.location, 'receive_location')
+
+        synchronizeDropdowns('#customer','#customer_b')
+        synchronizeDropdowns('#customer_b','#customer')
+        // synchronizeDropdowns('#supplier','#supplier_b')
+        // synchronizeDropdowns('#supplier_b','#supplier')
+        synchronizeDropdowns('#item','#item_b')
+        synchronizeDropdowns('#item_b','#item')
+
+        $('#order_id').val(data.running_order_id);
+        $('#order_id_b').val(data.running_order_id);
+      })
+  }
+
+  function populateDropdown(data, dropdownId) {
+    let dropdown = $('#' + dropdownId);
+    
+    // Loop through the data and append options to the dropdown
+    $.each(data, function(index, item) {
+        dropdown.append($('<option></option>').attr('value', item.id).text(item.name));
+    });
+  }
+
+  function synchronizeDropdowns(sourceId, targetId) {
+    $(sourceId).on('change', function() {
+        var selectedId = $(this).val();
+
+        // Set the selected value in the target dropdown to match the selected value in the source dropdown
+        $(targetId).val(selectedId);
+    });
+
+    // Trigger change event on page load to initialize the target dropdown based on the default value of the source dropdown
+    $(sourceId).trigger('change');
+  }
+
+  function validateForm(formdata) {
+
+    let errorMessages = '';
+    
+    let msgCount = 0;
+
+    // Check each field in the formdata object for empty values
+    for (const key in formdata) {
+      if (formdata.hasOwnProperty(key) && formdata[key].trim() === '') {
+        msgCount += 1
+        errorMessages += `${key.replace('_', ' ').toUpperCase()} field is empty ||  `;
+        if (msgCount%2 == 0){
+          errorMessages+=`</br>`
+        }
+      }
+    }
+    document.getElementById('errmsg').innerHTML = errorMessages;
+    document.getElementById('successmsg').innerHTML = '';
+    // $('#errmsg').val(errorMessages)
+    return errorMessages;
+  }
+
+
+
+  function clearData(){
+    $('#customer').val('1')
+    $('#supplier').val('1')
+    $('#delivery_date').val('')
+    $('#item').val('1')
+    $('#receive_phone').val('')
+    $('#delivery_date').val('')
+    $('#delivery_number').val('')
+    $('#receive_name').val('')
+    $('#q_sale').val('')
+    $('#sale_price').val('')
+    $('#total_sale_amount').val('')
+    $('#sale_pay_method').val('1')
+    $('#sale_vat_id').val('')
+    $('#receive_date').val('')
+    $('#receive_location').val('1')
+    $('#q_buy').val('')
+    $('#buy_price').val('')
+    $('#delivery_price').val('')
+    $('#remark').val('')
+    $('#buy_vat_id').val('')
+    $('#total_buy_amount').val('')
+    $('#buy_pay_method').val('1')
+    $('#pay_date').val('')
+  }
+
+  // function resetDropdown(sourceId) {
+  //   $(sourceId).on('change', function() {
+  //       var selectedId = $(this).val();
+
+  //       // Set the selected value in the target dropdown to match the selected value in the source dropdown
+  //       $(targetId).val('1');
+  //   });
+
+  //   // Trigger change event on page load to initialize the target dropdown based on the default value of the source dropdown
+  //   $(sourceId).trigger('change');
+  // }\
+
+  function formatToDecimal(inputFieldId) {
+    $('#'+inputFieldId).on('blur', function() {
+      formattedValue = parseFloat(Math.round($(this).val() * 100) / 100).toFixed(2)
+        $(this).val(formattedValue);
+      });
+    }
+
+</script>
+{% endblock %}

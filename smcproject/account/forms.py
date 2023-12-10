@@ -8,6 +8,12 @@ class OrderForm(ModelForm):
         model = Order_Transection
         fields = "__all__"
 
+# Code added for loading form data on the Booking page
+class TransectionForm(ModelForm):
+    class Meta:
+        model = Order_Transection
+        fields = "__all__"
+
 
 class BookingForm(ModelForm):
     class Meta:
