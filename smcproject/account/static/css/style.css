@@ -196,6 +196,10 @@ textarea {
     color: red;
 }
 
+#successmsg{
+    color: chartreuse;
+}
+
 #hero {
     background-image: linear-gradient(0deg, rgba(237, 232, 232, 0.3), rgba(30, 30, 30, 0.4)), url('../img/SM_badge.jpg');
     background-size: cover;

@@ -244,6 +244,7 @@
     <div class="row">
       <div class="column-npd">
         <h3 id="errmsg"></h3>
+        <h3 id="successmsg"></h3>
       </div>
     </div>
     <div class="row">
@@ -328,6 +329,7 @@
       })
       .then(data => {
         getorderitem();
+        document.getElementById('successmsg').innerHTML = 'Transection Save';
         clearData();
       })
       .catch(error => {
@@ -400,6 +402,7 @@
   function validateForm(formdata) {
 
     let errorMessages = '';
+    
     let msgCount = 0;
 
     // Check each field in the formdata object for empty values
@@ -413,6 +416,7 @@
       }
     }
     document.getElementById('errmsg').innerHTML = errorMessages;
+    document.getElementById('successmsg').innerHTML = '';
     // $('#errmsg').val(errorMessages)
     return errorMessages;
   }
