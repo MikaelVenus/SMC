@@ -65,15 +65,21 @@ def ordering(request):
     if request.method == 'POST':
         data = json.load(request)
 
+        customer_instance = Customer.objects.filter(customer_id=data['customer']).first()
+        supplier_instance = Supplier.objects.filter(supplier_id=data['supplier']).first()
+        item_instance = Item.objects.filter(item_id=data['item']).first()
+        target_location_instance = Location.objects.filter(location_id=data['target_location']).first()
+        receive_location_instance = Location.objects.filter(location_id=data['receive_location']).first()
+        
         # date = request.GET.get('date',datetime.today().date())
         add_item = Order_Transection(
             order_id = data['order_id'],
-            customer = data['customer'],
-            supplier = data['supplier'],
-            item = data['item'],
-            target_location = data['target_location'],
+            customer = customer_instance,
+            supplier = supplier_instance,
+            item = item_instance,
+            target_location = target_location_instance,
             receive_phone = data['receive_phone'],
-            delivery_date = data['delivery_date'],
+            delivery_date = convert_date_format(data['delivery_date']),
             delivery_number = data['delivery_number'],
             receive_name = data['receive_name'],
             q_sale = data['q_sale'],
@@ -81,8 +87,8 @@ def ordering(request):
             total_sale_amount = data['total_sale_amount'],
             sale_pay_method = data['sale_pay_method'],        
             sale_vat_id = data['sale_vat_id'], 
-            receive_date = data['receive_date'], 
-            receive_location = data['receive_location'], 
+            receive_date = convert_date_format(data['receive_date']), 
+            receive_location = receive_location_instance, 
             q_buy = data['q_buy'], 
             buy_price = data['buy_price'],     
             delivery_price = data['delivery_price'],     
@@ -90,7 +96,7 @@ def ordering(request):
             buy_vat_id = data['buy_vat_id'],     
             total_buy_amount = data['total_buy_amount'],     
             buy_pay_method = data['buy_pay_method'],     
-            pay_date = data['pay_date'],     
+            pay_date = convert_date_format(data['pay_date']),     
         )
         add_item.save()
 
@@ -157,7 +163,7 @@ def get_order_item():
     if max_order_id_str and formatted_date == max_order_id_str[:6]:
         running_order_id = str(int(max_order_id_str) + 1)
     else:
-        running_order_id = current_date + '001'
+        running_order_id = formatted_date + '001'
 
     orderItemData = {
         'location': location_dict,
@@ -174,6 +180,16 @@ def get_order_item():
 
 def about(request):
     return render(request, 'about.html')
+
+
+def convert_date_format(input_date):
+    # Parse the input date string to a datetime object
+    date_object = datetime.strptime(input_date, "%d-%m-%Y")
+
+    # Format the datetime object to "yyyy mm dd" format
+    formatted_date = date_object.strftime("%Y-%m-%d")
+
+    return formatted_date
 
 
 

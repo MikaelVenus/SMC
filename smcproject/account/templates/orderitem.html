@@ -75,7 +75,7 @@
               <div class="column-npd">
                 <p>
                   <label for="target_location">สถานที่จัดส่ง:</label>
-                  <input type="text" placeholder="target location" maxlength="200" required="" id="target_location">
+                  <select id="target_location"></select>
                   <!-- <textarea type="text" placeholder="Your Name" maxlength="200" required="" id="first_name"></textarea> -->
                 </p>
               </div>
@@ -197,7 +197,7 @@
         <div class="column-npd">
           <p>
             <label for="receive_location">สถานที่รับสินค้า:</label>
-            <input type="text" placeholder="receive location" maxlength="200" required="" id="receive_location">
+            <select id="receive_location"></select>
             <!-- <textarea type="text" placeholder="Your Name" maxlength="200" required="" id="first_name"></textarea> -->
           </p>
         </div>
@@ -240,9 +240,20 @@
       </div>
     </article>
   </section>
-  <section style="display: flex; justify-content: flex-end;">
-    <button type="button" id="reserve_button">Reserve</button>
+  <section>
+    <div class="row">
+      <div class="column-npd">
+        <h3 id="errmsg"></h3>
+      </div>
+    </div>
+    <div class="row">
+      <div class="column-npd" style="display: flex; justify-content: flex-end;">
+        <button type="button" id="reserve_button">Reserve</button>
+      </div>
+    </div>
   </section>
+  <!-- <section style="display: flex; justify-content: flex-end;">
+  </section> -->
 </form>
 
 <script>
@@ -259,9 +270,17 @@
       dateFormat: 'dd-mm-yy' // Specify the date format as day-month-year
     });
 
+    getorderitem()
+
+    formatToDecimal('q_sale')
+    formatToDecimal('sale_price')
+    formatToDecimal('total_sale_amount')
+    formatToDecimal('q_buy')
+    formatToDecimal('buy_price')
+    formatToDecimal('delivery_price')
+    formatToDecimal('total_buy_amount')
   });
 
-  getorderitem()
 
   document.getElementById('reserve_button').addEventListener('click', function (e) {
     const formdata = {
@@ -291,12 +310,35 @@
       pay_date : document.getElementById('pay_date').value,     
     }
     console.log(formdata)
-
-    fetch("{% url 'ordering' %}", { method: 'post', body: JSON.stringify(formdata) })
-      .then(r => r.text())
-      .then(data => {
-        getorderitem()
+    errormessage=validateForm(formdata); 
+    if (errormessage == ''){
+      fetch("{% url 'ordering' %}", { method: 'post', body: JSON.stringify(formdata) })
+      .then(r => {
+        if (!r.ok) {
+          // Check if the response status is 500 (Internal Server Error)
+          if (r.status === 500) {
+            // Handle the 500 error case here
+            // For example, log the error or perform specific actions
+            console.error("Internal Server Error: ", r.statusText);
+          }
+          // Throw an error to be caught in the next catch block
+          throw new Error('Network response was not ok.');
+        }
+        return r.text();
       })
+      .then(data => {
+        getorderitem();
+        clearData();
+      })
+      .catch(error => {
+        // This catch block will handle any errors thrown in the fetch chain
+        console.error('There was a problem with the fetch operation:', error);
+        getorderitem();
+        // Perform actions if needed when encountering an error
+        // For example, do not clear data if the response status was 500
+        // clearData();
+      });
+        }
   })
 
 
@@ -319,6 +361,8 @@
         populateDropdown(data.item, 'item_b')
         populateDropdown(data.supplier, 'supplier')
         populateDropdown(data.supplier, 'supplier_b')
+        populateDropdown(data.location, 'target_location')
+        populateDropdown(data.location, 'receive_location')
 
         synchronizeDropdowns('#customer','#customer_b')
         synchronizeDropdowns('#customer_b','#customer')
@@ -353,6 +397,72 @@
     $(sourceId).trigger('change');
   }
 
+  function validateForm(formdata) {
+
+    let errorMessages = '';
+    let msgCount = 0;
+
+    // Check each field in the formdata object for empty values
+    for (const key in formdata) {
+      if (formdata.hasOwnProperty(key) && formdata[key].trim() === '') {
+        msgCount += 1
+        errorMessages += `${key.replace('_', ' ').toUpperCase()} field is empty ||  `;
+        if (msgCount%2 == 0){
+          errorMessages+=`</br>`
+        }
+      }
+    }
+    document.getElementById('errmsg').innerHTML = errorMessages;
+    // $('#errmsg').val(errorMessages)
+    return errorMessages;
+  }
+
+
+
+  function clearData(){
+    $('#customer').val('1')
+    $('#supplier').val('1')
+    $('#delivery_date').val('')
+    $('#item').val('1')
+    $('#receive_phone').val('')
+    $('#delivery_date').val('')
+    $('#delivery_number').val('')
+    $('#receive_name').val('')
+    $('#q_sale').val('')
+    $('#sale_price').val('')
+    $('#total_sale_amount').val('')
+    $('#sale_pay_method').val('1')
+    $('#sale_vat_id').val('')
+    $('#receive_date').val('')
+    $('#receive_location').val('1')
+    $('#q_buy').val('')
+    $('#buy_price').val('')
+    $('#delivery_price').val('')
+    $('#remark').val('')
+    $('#buy_vat_id').val('')
+    $('#total_buy_amount').val('')
+    $('#buy_pay_method').val('1')
+    $('#pay_date').val('')
+  }
+
+  // function resetDropdown(sourceId) {
+  //   $(sourceId).on('change', function() {
+  //       var selectedId = $(this).val();
+
+  //       // Set the selected value in the target dropdown to match the selected value in the source dropdown
+  //       $(targetId).val('1');
+  //   });
+
+  //   // Trigger change event on page load to initialize the target dropdown based on the default value of the source dropdown
+  //   $(sourceId).trigger('change');
+  // }\
+
+  function formatToDecimal(inputFieldId) {
+    $('#'+inputFieldId).on('blur', function() {
+      formattedValue = parseFloat(Math.round($(this).val() * 100) / 100).toFixed(2)
+        $(this).val(formattedValue);
+      });
+    }
 
 </script>
 {% endblock %}
