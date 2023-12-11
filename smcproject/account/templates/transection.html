@@ -1,7 +1,36 @@
 {% extends 'base.html' %}
 {% load static %}
-
 {% block content %}
+<link rel="stylesheet" type="text/css" href="{% static 'css/style_media1600.css' %}">
+<!-- <style>
+  @media (max-width: 1600px) {
+    section {
+        flex-direction: column;   
+    }
+
+    .row {
+        flex-direction: column;
+        width: 100%;
+      }
+   
+    input{
+        width: 100%;
+    }
+
+    select{
+        width: 100%;
+    }
+
+    textarea{
+        width: 100%;
+    }
+
+    #button{
+        width: 100%;
+    }
+
+  }
+</style> -->
 <form method="POST" id="form">
   <section>
     <article>
@@ -11,10 +40,51 @@
         <!--Begin col-->
         <div class="column-100">
             {% csrf_token %}
-            <!-- <form method="POST" id="form"> -->
-              <!-- {% csrf_token %} -->
-            
-            <!-- </form> -->
+          <main class="table custom-table">
+            <!-- <section class="table_header">
+              <h1>Customer's Orders</h1>
+            </section> -->
+            <section class="table_body">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>id</th>
+                            <th>Customer</th>
+                            <th>Location</th>
+                            <th>Order Date</th>
+                            <th>Status</th>
+                            <th>Amount</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>1</td>
+                            <td><img src="{% static 'img/SM_badge.jpg' %}">SM_Badge</td>
+                            <td>Seoul</td>
+                            <td>17 dec 2022</td>
+                            <td>Delivered</td>
+                            <td>$128.9</td>
+                        </tr>
+                        <tr>
+                          <td>1</td>
+                          <td><img src="{% static 'img/SM_badge.jpg' %}">SM_Badge</td>
+                          <td>Seoul</td>
+                          <td>17 dec 2022</td>
+                          <td>Delivered</td>
+                          <td>$128.9</td>
+                        </tr>
+                        <tr>
+                          <td>1</td>
+                          <td><img src="{% static 'img/SM_badge.jpg' %}">SM_Badge</td>
+                          <td>Seoul</td>
+                          <td>17 dec 2022</td>
+                          <td>Delivered</td>
+                          <td>$128.9</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+          </main>
         </div>
         <!--End col-->
       </div>

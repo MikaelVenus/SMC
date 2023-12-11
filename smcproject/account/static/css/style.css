@@ -188,7 +188,7 @@ textarea {
   }
 
   #reserve_button:hover {
-    background-color: #023020;
+    background-color: #023020;bookings
   }
 
 
@@ -315,6 +315,7 @@ footer p {
     font-size: 1rem;
 }
 
+/* @media (max-width: 800px) { */
 @media (max-width: 800px) {
     section {
         flex-direction: column;   
@@ -340,4 +341,115 @@ footer p {
     #button{
         width: 100%;
     }
+
   }
+
+
+  
+
+  
+
+
+.custom-table main.table {
+    width: 82vw;
+    height: 90vh;
+    background-color: #d3d3d3;
+
+    backdrop-filter: blur(7px);
+    box-shadow: 0 0.4rem 0.8rem #0005;
+    border-radius: 0.8rem;
+
+    overflow: hidden;
+    
+}
+
+.custom-table{
+    margin: 0;
+    padding: 0;
+
+    box-sizing: border-box;
+    /* font-family: sans-serif; */
+}
+
+.custom-table h1{
+    margin: 0;
+}
+
+.custom-table section{
+    width: auto;
+}
+
+.custom-table .table_body {
+    width: 95%;
+    max-height: 89%;
+    background-color: #fff4;
+
+    margin:  0.8rem auto;
+    border-radius: 0.6rem;
+    overflow: auto;
+}
+
+.custom-table .table_body table {
+    padding: 0;
+    width: auto;
+}
+
+.custom-table .table_body::-webkit-scrollbar{
+    width: 0.5rem;
+    height: 0.5rem;
+}
+
+.custom-table .table_body::-webkit-scrollbar-thumb{
+    border-radius: 0.5rem;
+    background-color: #0004;
+}
+
+.custom-table .table_body:hover:-webkit-scrollbar-thumb{
+    visibility: visible;
+}
+
+.custom-table body{
+    min-height: 100vh;
+    background: center / cover;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.custom-table th,td {
+    padding: 1rem;
+    border-collapse: collapse;
+}
+
+
+.custom-table thead th{
+    position: sticky;
+    top: 0;
+    left: 0;
+    background-color: lavender;
+}
+
+.custom-table img {
+    width: 36px;
+    height: 36px;
+    margin-right: .5rem;
+    border-radius:  50%;
+
+    vertical-align: middle;
+} 
+
+.custom-table table,th,td{
+    padding: 1rem;
+}
+
+.custom-table tbody tr:nth-child(even){
+    background-color: #0000000b;
+}
+
+.custom-table tbody tr:hover{
+    background-color: #fff6;
+}
+
+
+
+  

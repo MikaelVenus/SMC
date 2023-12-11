@@ -1,0 +1,27 @@
+@media (max-width: 1600px) {
+    section {
+        flex-direction: column;   
+    }
+
+    .row {
+        flex-direction: column;
+        width: 100%;
+      }
+   
+    input{
+        width: 100%;
+    }
+
+    select{
+        width: 100%;
+    }
+
+    textarea{
+        width: 100%;
+    }
+
+    #button{
+        width: 100%;
+    }
+
+  }
