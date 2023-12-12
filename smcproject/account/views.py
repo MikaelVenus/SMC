@@ -341,66 +341,146 @@ def get_edit_order_item():
     return orderItemData
 
 
+# def get_transection_item():
+#     transection_sale_dict = {}
+#     transection_buy_dict = {}
+#     transection_total_sale_dict = {}
+#     transection_total_buy_dict = {}
+
+#     transection_data = Order_Transection.objects.all().order_by('-order_id')
+#     print(transection_data)
+
+#     for transection in transection_data:
+#         transection_sale_dict[transection.order_id] = {
+#         'order_id': transection.order_id,
+#         'customer': transection.customer.name,
+#         'supplier': transection.supplier.name,
+#         'item': transection.item.name,
+#         'delivery_date': transection.delivery_date.strftime("%y-%m-%d"),
+#         #Customer part
+#         'target_location': transection.target_location.name,
+#         'receive_phone': transection.receive_phone,
+#         'delivery_number': transection.delivery_number,
+#         'receive_name': transection.receive_name,
+#         'q_sale': str(transection.q_sale),
+#         'sale_price': str(transection.sale_price),
+#         'total_sale_amount': str(transection.total_sale_amount),
+#         'sale_pay_method' : transection.sale_pay_method,
+#         'sale_vat_id': transection.sale_vat_id,
+#         'delivery_number': transection.delivery_number,
+#         'receive_date': transection.receive_date.strftime("%y-%m-%d"),
+#     }
+        
+#     for transection in transection_data:
+#         transection_buy_dict[transection.order_id] = {
+#         'order_id': transection.order_id,
+#         'customer': transection.customer.name,
+#         'supplier': transection.supplier.name,
+#         'item': transection.item.name,
+#         'delivery_date': transection.delivery_date.strftime("%y-%m-%d"),
+#         #Owner Part
+#         'receive_location': transection.receive_location.name,
+#         'q_buy': str(transection.q_buy),
+#         'buy_price': str(transection.buy_price),
+#         'delivery_price': str(transection.delivery_price),
+#         'remark': transection.remark,
+#         'buy_vat_id': transection.buy_vat_id,
+#         'total_buy_amount': str(transection.total_buy_amount),
+#         'buy_pay_method': transection.buy_pay_method,
+#         'pay_date': transection.pay_date.strftime("%y-%m-%d"),
+#     }
+        
+#     total_q_sale = 0 
+#     total_sale_amount = 0 
+#     for transaction_id, transaction_data in transection_sale_dict.items():
+#         total_q_sale += float(transaction_data.get('q_sale', 0))
+#         total_sale_amount += float(transaction_data.get('total_sale_amount', 0)) 
+    
+#     total_q_buy = 0 
+#     total_buy_amount = 0 
+#     for transaction_id, transaction_data in transection_buy_dict.items():
+#         total_q_buy += float(transaction_data.get('q_buy', 0)) 
+#         total_buy_amount += float(transaction_data.get('total_buy_amount', 0)) 
+    
+
+#     transection_total_sale_dict = {
+#         'q_sale':total_q_sale,
+#         'total_sale_amount':total_sale_amount,
+#     }
+
+#     transection_total_buy_dict = {
+#         'q_buy':total_q_buy,
+#         'total_buy_amount':total_buy_amount,
+#     }
+
+#     transectionData = {
+#         'transection_sale': transection_sale_dict,
+#         'transection_buy': transection_buy_dict,
+#         'transection_total_sale': transection_total_sale_dict,
+#         'transection_total_buy': transection_total_buy_dict,
+#     }
+
+#     return transectionData
+
 def get_transection_item():
     transection_sale_dict = {}
     transection_buy_dict = {}
     transection_total_sale_dict = {}
     transection_total_buy_dict = {}
 
-    transection_data = Order_Transection.objects.all()
+    transection_data = Order_Transection.objects.all().order_by('-order_id')
+    print(transection_data)
 
-    for transection in transection_data:
-        transection_sale_dict[transection.order_id] = {
-        'order_id': transection.order_id,
-        'customer': transection.customer.name,
-        'supplier': transection.supplier.name,
-        'item': transection.item.name,
-        'delivery_date': transection.delivery_date.strftime("%y-%m-%d"),
-        #Customer part
-        'target_location': transection.target_location.name,
-        'receive_phone': transection.receive_phone,
-        'delivery_number': transection.delivery_number,
-        'receive_name': transection.receive_name,
-        'q_sale': str(transection.q_sale),
-        'sale_price': str(transection.sale_price),
-        'total_sale_amount': str(transection.total_sale_amount),
-        'sale_pay_method' : transection.sale_pay_method,
-        'sale_vat_id': transection.sale_vat_id,
-        'delivery_number': transection.delivery_number,
-        'receive_date': transection.receive_date.strftime("%y-%m-%d"),
-    }
+    transection_sale_list = [
+        {
+            'order_id': transection.order_id,
+            'customer': transection.customer.name,
+            'supplier': transection.supplier.name,
+            'item': transection.item.name,
+            'delivery_date': transection.delivery_date.strftime("%y-%m-%d"),
+            #Customer part
+            'target_location': transection.target_location.name,
+            'receive_phone': transection.receive_phone,
+            'delivery_number': transection.delivery_number,
+            'receive_name': transection.receive_name,
+            'q_sale': str(transection.q_sale),
+            'sale_price': str(transection.sale_price),
+            'total_sale_amount': str(transection.total_sale_amount),
+            'sale_pay_method' : transection.sale_pay_method,
+            'sale_vat_id': transection.sale_vat_id,
+            'delivery_number': transection.delivery_number,
+            'receive_date': transection.receive_date.strftime("%y-%m-%d"),
+        }
+        for transection in Order_Transection.objects.all().order_by('-order_id')
+    ]
+ 
+    transection_buy_list = [
+        {
+            'order_id': transection.order_id,
+            'customer': transection.customer.name,
+            'supplier': transection.supplier.name,
+            'item': transection.item.name,
+            'delivery_date': transection.delivery_date.strftime("%y-%m-%d"),
+            #Owner Part
+            'receive_location': transection.receive_location.name,
+            'q_buy': str(transection.q_buy),
+            'buy_price': str(transection.buy_price),
+            'delivery_price': str(transection.delivery_price),
+            'remark': transection.remark,
+            'buy_vat_id': transection.buy_vat_id,
+            'total_buy_amount': str(transection.total_buy_amount),
+            'buy_pay_method': transection.buy_pay_method,
+            'pay_date': transection.pay_date.strftime("%y-%m-%d"),
+        }
         
-    for transection in transection_data:
-        transection_buy_dict[transection.order_id] = {
-        'order_id': transection.order_id,
-        'customer': transection.customer.name,
-        'supplier': transection.supplier.name,
-        'item': transection.item.name,
-        'delivery_date': transection.delivery_date.strftime("%y-%m-%d"),
-        #Owner Part
-        'receive_location': transection.receive_location.name,
-        'q_buy': str(transection.q_buy),
-        'buy_price': str(transection.buy_price),
-        'delivery_price': str(transection.delivery_price),
-        'remark': transection.remark,
-        'buy_vat_id': transection.buy_vat_id,
-        'total_buy_amount': str(transection.total_buy_amount),
-        'buy_pay_method': transection.buy_pay_method,
-        'pay_date': transection.pay_date.strftime("%y-%m-%d"),
-    }
-        
-    total_q_sale = 0 
-    total_sale_amount = 0 
-    for transaction_id, transaction_data in transection_sale_dict.items():
-        total_q_sale += float(transaction_data.get('q_sale', 0))
-        total_sale_amount += float(transaction_data.get('total_sale_amount', 0)) 
-    
-    total_q_buy = 0 
-    total_buy_amount = 0 
-    for transaction_id, transaction_data in transection_buy_dict.items():
-        total_q_buy += float(transaction_data.get('q_buy', 0)) 
-        total_buy_amount += float(transaction_data.get('total_buy_amount', 0)) 
-    
+        for transection in Order_Transection.objects.all().order_by('-order_id')
+    ]
+ 
+    total_q_sale = sum(float(item.get('q_sale', 0)) for item in transection_sale_list)
+    total_sale_amount = sum(float(item.get('total_sale_amount', 0)) for item in transection_sale_list)
+
+    total_q_buy = sum(float(item.get('q_buy', 0)) for item in transection_buy_list)
+    total_buy_amount = sum(float(item.get('total_buy_amount', 0)) for item in transection_buy_list)
 
     transection_total_sale_dict = {
         'q_sale':total_q_sale,
@@ -411,10 +491,10 @@ def get_transection_item():
         'q_buy':total_q_buy,
         'total_buy_amount':total_buy_amount,
     }
-
+    
     transectionData = {
-        'transection_sale': transection_sale_dict,
-        'transection_buy': transection_buy_dict,
+        'transection_sale': transection_sale_list,
+        'transection_buy': transection_buy_list,
         'transection_total_sale': transection_total_sale_dict,
         'transection_total_buy': transection_total_buy_dict,
     }
