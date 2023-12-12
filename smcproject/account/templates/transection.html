@@ -144,7 +144,8 @@
       // tableSaleTemplate = getTableSaleTemplate();
         genTable(data.transection_sale, 'sale_tbody', genRowSaleTemplate);
         genTable(data.transection_buy, 'buy_tbody', genRowBuyTemplate);
-        
+        genLastRowSaleTemplate(data.transection_total_sale, 'sale_tbody')
+        genLastRowBuyTemplate(data.transection_total_buy, 'buy_tbody')
       })
   }
 
@@ -186,7 +187,7 @@
         <td>${rowData.receive_phone}</td>
         <td>${rowData.receive_name}</td>
     `;
-  }
+    }
 
     function genRowBuyTemplate(rowData) {
     return `
@@ -204,8 +205,66 @@
         <td style='min-width:70px'>${rowData.pay_date}</td>
         <td style='min-width:100px'>${rowData.remark}</td>
     `;
-}
+  }
 
+  function genLastRowSaleTemplate(rowData,tableId) {
+    const qSale = rowData.q_sale;
+    const totalSaleAmount = rowData.total_sale_amount;
+    const table = document.getElementById(tableId);
+
+    // Create a new table row (tr)
+    const newRow = document.createElement('tr');
+
+    // Create and set HTML content for the new row
+    newRow.innerHTML = `
+        <td>รวม</td>
+        <td style='min-width:150px'></td>
+        <td style='min-width:150px'></td>
+        <td style='min-width:70px'></td>
+        <td style='min-width:70px'></td>
+        <td>${qSale}</td>
+        <td></td>
+        <td style='min-width:150px'></td>
+        <td style='min-width:150px'></td>
+        <td>${totalSaleAmount}</td>
+        <td></td>
+        <td style='min-width:70px'></td>
+        <td></td>
+    `;
+
+    // Append the newly created row to the table
+    table.appendChild(newRow);
+  }
+
+
+  function genLastRowBuyTemplate(rowData,tableId) {
+    const q_buy = rowData.q_buy;
+    const totalBuyAmount = rowData.total_buy_amount;
+    const table = document.getElementById(tableId);
+
+    // Create a new table row (tr)
+    const newRow = document.createElement('tr');
+
+    // Create and set HTML content for the new row
+    newRow.innerHTML = `
+        <td>รวม</td>
+        <td style='min-width:150px'></td>
+        <td style='min-width:150px'></td>
+        <td style='min-width:70px'></td>
+        <td style='min-width:70px'></td>
+        <td>${q_buy}</td>
+        <td></td>
+        <td style='min-width:150px'></td>
+        <td style='min-width:150px'></td>
+        <td>${totalBuyAmount}</td>
+        <td></td>
+        <td style='min-width:70px'></td>
+        <td></td>
+    `;
+
+    // Append the newly created row to the table
+    table.appendChild(newRow);
+  }
 
   
 </script>

@@ -344,6 +344,8 @@ def get_edit_order_item():
 def get_transection_item():
     transection_sale_dict = {}
     transection_buy_dict = {}
+    transection_total_sale_dict = {}
+    transection_total_buy_dict = {}
 
     transection_data = Order_Transection.objects.all()
 
@@ -386,12 +388,35 @@ def get_transection_item():
         'buy_pay_method': transection.buy_pay_method,
         'pay_date': transection.pay_date.strftime("%y-%m-%d"),
     }
+        
+    total_q_sale = 0 
+    total_sale_amount = 0 
+    for transaction_id, transaction_data in transection_sale_dict.items():
+        total_q_sale += float(transaction_data.get('q_sale', 0))
+        total_sale_amount += float(transaction_data.get('total_sale_amount', 0)) 
+    
+    total_q_buy = 0 
+    total_buy_amount = 0 
+    for transaction_id, transaction_data in transection_buy_dict.items():
+        total_q_buy += float(transaction_data.get('q_buy', 0)) 
+        total_buy_amount += float(transaction_data.get('total_buy_amount', 0)) 
+    
 
+    transection_total_sale_dict = {
+        'q_sale':total_q_sale,
+        'total_sale_amount':total_sale_amount,
+    }
 
+    transection_total_buy_dict = {
+        'q_buy':total_q_buy,
+        'total_buy_amount':total_buy_amount,
+    }
 
     transectionData = {
         'transection_sale': transection_sale_dict,
         'transection_buy': transection_buy_dict,
+        'transection_total_sale': transection_total_sale_dict,
+        'transection_total_buy': transection_total_buy_dict,
     }
 
     return transectionData
