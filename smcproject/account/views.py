@@ -108,13 +108,23 @@ def ordering(request):
 
 
 def transection(request):
-    form = TransectionForm()
-    if request.method == 'POST':
-        form = TransectionForm(request.POST)
-        if form.is_valid():
-            form.save()
-    context = {'form':form}
+    # form = TransectionForm()
+    # if request.method == 'POST':
+    #     form = TransectionForm(request.POST)
+    #     if form.is_valid():
+    #         form.save()
+    context = {'form':'form'}
     return render(request, 'transection.html', context)
+
+@csrf_exempt
+def transectionviews(request):
+    # form = TransectionForm()
+    # if request.method == 'POST':
+    #     form = TransectionForm(request.POST)
+    #     if form.is_valid():
+    #         form.save()
+    dropdownitem_json = json.dumps(get_transection_item())
+    return HttpResponse(dropdownitem_json, content_type='application/json')
 
 
 def get_order_item():
@@ -187,6 +197,26 @@ def get_order_item():
     }
 
     return orderItemData
+
+
+def get_transection_item():
+    transection_dict = {}
+
+    transection_data = Order_Transection.objects.all()
+
+    for transection in transection_data:
+        transection_dict[transection.order_id] = {
+        'order_id': transection.order_id,
+        'customer': transection.customer.name,
+    }
+
+
+
+    transectionData = {
+        'data': transection_dict
+    }
+
+    return transectionData
 
 def about(request):
     return render(request, 'about.html')

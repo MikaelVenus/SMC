@@ -18,4 +18,5 @@ urlpatterns = [
     path('menu_item/<int:pk>/', views.display_menu_item, name="menu_item"),  
     path('bookings', views.bookings, name='bookings'), 
     path('transection', views.transection, name='transection'), 
+    path('transectionviews', views.transectionviews, name='transectionviews'), 
 ]
