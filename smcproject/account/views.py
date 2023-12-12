@@ -200,20 +200,55 @@ def get_order_item():
 
 
 def get_transection_item():
-    transection_dict = {}
+    transection_sale_dict = {}
+    transection_buy_dict = {}
 
     transection_data = Order_Transection.objects.all()
 
     for transection in transection_data:
-        transection_dict[transection.order_id] = {
+        transection_sale_dict[transection.order_id] = {
         'order_id': transection.order_id,
         'customer': transection.customer.name,
+        'supplier': transection.supplier.name,
+        'item': transection.item.name,
+        #Customer part
+        'target_location': transection.target_location.name,
+        'receive_phone': transection.receive_phone,
+        'delivery_date': transection.delivery_date.strftime("%y-%m-%d"),
+        'delivery_number': transection.delivery_number,
+        'receive_name': transection.receive_name,
+        'q_sale': str(transection.q_sale),
+        'sale_price': str(transection.sale_price),
+        'total_sale_amount': str(transection.total_sale_amount),
+        'sale_pay_method' : transection.sale_pay_method,
+        'sale_vat_id': transection.sale_vat_id,
+        'delivery_number': transection.delivery_number,
+        'receive_date': transection.receive_date.strftime("%y-%m-%d"),
+    }
+        
+    for transection in transection_data:
+        transection_buy_dict[transection.order_id] = {
+        'order_id': transection.order_id,
+        'customer': transection.customer.name,
+        'supplier': transection.supplier.name,
+        'item': transection.item.name,
+        #Owner Part
+        'receive_location': transection.receive_location.name,
+        'q_buy': str(transection.q_buy),
+        'buy_price': str(transection.buy_price),
+        'delivery_price': str(transection.delivery_price),
+        'remark': transection.remark,
+        'buy_vat_id': transection.buy_vat_id,
+        'total_buy_amount': str(transection.total_buy_amount),
+        'buy_pay_method': transection.buy_pay_method,
+        'pay_date': transection.pay_date.strftime("%y-%m-%d"),
     }
 
 
 
     transectionData = {
-        'data': transection_dict
+        'transection_sale': transection_sale_dict,
+        'transection_buy': transection_buy_dict,
     }
 
     return transectionData

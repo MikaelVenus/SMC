@@ -63,7 +63,7 @@
                             <th>ผู้รับสินค้า:</th>
                         </tr>
                     </thead>
-                    <tbody>
+                    <tbody id="sale_tbody">
                         <tr>
                             <td>1</td>
                             <td><img src="{% static 'img/SM_badge.jpg' %}">SM_Badge</td>
@@ -150,25 +150,55 @@
 
   });
 
+  tableSaleTemplate =  `
+                <td>${rowData.order_id}</td>
+                <td>${rowData.item}</td>
+                <td>${rowData.target_location}</td>
+                <td>${rowData.delivery_date}</td>
+                <td>Delivered</td>
+                <td>$${rowData.total_sale_amount}</td>
+            `;
+
+  tableBuyTemplate =  `
+      <td>${rowData.order_id}</td>
+      <td>${rowData.item}</td>
+      <td>${rowData.target_location}</td>
+      <td>${rowData.delivery_date}</td>
+      <td>Delivered</td>
+      <td>$${rowData.total_sale_amount}</td>
+  `;
+
   function viewTransection() {
     
     fetch("{% url 'transectionviews' %}")
       .then(r => r.json())
       .then(data => {
         console.log(data)
+        genTable(data.transection_sale, 'sale_tbody', tableSaleTemplate);
         
       })
   }
 
-  function populateDropdown(data, dropdownId) {
-    let dropdown = $('#' + dropdownId);
-    
-    // Loop through the data and append options to the dropdown
-    $.each(data, function(index, item) {
-        dropdown.append($('<option></option>').attr('value', item.id).text(item.name));
-    });
-  }
 
+  function genTable(data, tableId, templateHtml) {
+
+    // Get the table element where you want to append rows
+    const table = document.getElementById(tableId);
+
+    // Loop through each key in transection_sale
+    for (const key in data) {
+        if (Object.hasOwnProperty.call(data, key)) {
+            const rowData = data[key];
+            const tableRow = document.createElement('tr');
+
+            // Adding table cell data
+            tableRow.innerHTML = templateHtml;
+
+            // Appending the created table row to the table
+            table.appendChild(tableRow);
+        }
+    }
+  }
 
   
 </script>
