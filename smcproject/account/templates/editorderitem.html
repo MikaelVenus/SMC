@@ -23,7 +23,7 @@
               <div class="column-npd">
                 <p>
                   <label for="order_id">เลขที่รายการ:</label>
-                  <input type="text" placeholder="order id" maxlength="200" required="" id="order_id" readonly>
+                  <input type="text" placeholder="order id" maxlength="200" required="" id="order_id">
                 </p>
               </div>
               <div class="column-npd">
@@ -249,7 +249,7 @@
     </div>
     <div class="row">
       <div class="column-npd" style="display: flex; justify-content: flex-end;">
-        <button type="button" id="reserve_button">Order</button>
+        <button type="button" id="reserve_button">Edit Order</button>
       </div>
     </div>
   </section>
@@ -272,6 +272,7 @@
     });
 
     getorderitem()
+    bindSearchOrderItem('order_id')
 
     formatToDecimal('q_sale')
     formatToDecimal('sale_price')
@@ -350,7 +351,6 @@
 
 
   function getorderitem() {
-    
     fetch("{% url 'orderitemviews' %}")
       .then(r => r.json())
       .then(data => {
@@ -378,6 +378,27 @@
       })
   }
 
+  function geteditorderitem() {
+
+    let order_id = document.getElementById('order_id').value
+    fetch(`{% url 'editorderitemviews' %}?order_id=${order_id}`, {
+        method: 'GET'
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        return response.json();
+    })
+    .then(data => {
+        console.log(data);
+        // Do something with the received data
+    })
+    .catch(error => {
+        console.error('There was a problem with the fetch operation:', error);
+    });
+  }
+
   function populateDropdown(data, dropdownId) {
     let dropdown = $('#' + dropdownId);
     
@@ -393,6 +414,18 @@
 
         // Set the selected value in the target dropdown to match the selected value in the source dropdown
         $(targetId).val(selectedId);
+    });
+
+    // Trigger change event on page load to initialize the target dropdown based on the default value of the source dropdown
+    $(sourceId).trigger('change');
+  }
+
+  function bindSearchOrderItem(sourceId) {
+    $('#'+sourceId).on('blur', function() {
+      let order_id = document.getElementById('order_id').value
+        if (order_id){
+          geteditorderitem();
+        }
     });
 
     // Trigger change event on page load to initialize the target dropdown based on the default value of the source dropdown

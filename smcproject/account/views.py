@@ -60,6 +60,16 @@ def orderitemviews(request):
     dropdownitem_json = json.dumps(get_order_item())
     return HttpResponse(dropdownitem_json, content_type='application/json')
 
+
+def editorderitem(request):
+    form = OrderForm()
+    if request.method == 'POST':
+        form = OrderForm(request.POST)
+        if form.is_valid():
+            form.save()
+    context = {'form':form}
+    return render(request, 'editorderitem.html', context)
+
 @csrf_exempt
 def ordering(request):
     if request.method == 'POST':
@@ -106,6 +116,13 @@ def ordering(request):
         order_item_json = serializers.serialize('json', order_item)
         return HttpResponse(order_item_json, content_type='application/json')
 
+
+@csrf_exempt
+def editorderitemviews(request):
+    order_id = request.GET.get('order_id')
+    print(order_id)
+    order_data = json.dumps(get_transection_item_by_id(order_id))
+    return HttpResponse(order_data, content_type='application/json')
 
 def transection(request):
     # form = TransectionForm()
@@ -199,6 +216,78 @@ def get_order_item():
     return orderItemData
 
 
+def get_edit_order_item():
+    location_dict = {}
+    customer_dict = {}
+    item_dict = {}
+    supplier_dict = {}
+    pay_method_dict = {}
+
+    location_data = Location.objects.all()
+    # Create a dictionary for each Location object and append it to dropdownitem
+    for location in location_data:
+        location_dict[location.location_id] = {
+        'id': location.location_id,
+        'name': location.name
+    }
+
+    customer_data = Customer.objects.all()
+    # Create a dictionary for each Location object and append it to dropdownitem
+    for customer in customer_data:
+        customer_dict[customer.customer_id] = {
+            'id': customer.customer_id,
+            'name': customer.name
+        }
+
+    item_data = Item.objects.all()
+    # Create a dictionary for each Location object and append it to dropdownitem
+    for item in item_data:
+        item_dict[item.item_id] = {
+            'id': item.item_id,
+            'name': item.name
+        }
+    
+    supplier_data = Supplier.objects.all()
+    # Create a dictionary for each Location object and append it to dropdownitem
+    for supplier in supplier_data:
+        supplier_dict[supplier.supplier_id] = {
+            'id': supplier.supplier_id,
+            'name': supplier.name
+        }
+    
+
+    pay_method_dict = dict(Order_Transection.PAY_RECEIVE_METHOD_CHOICES)
+    payment_methods_list = []
+
+    # Convert the payment_methods_dict to a list of dictionaries with 'id' and 'name'
+    for key, value in pay_method_dict.items():
+        payment_methods_list.append({'id': key, 'name': value})
+    
+    max_order_id = Order_Transection.objects.aggregate(max_order_id=Max('order_id'))
+    max_order_id_str = str(max_order_id['max_order_id']) if max_order_id['max_order_id'] is not None else ''
+    current_date = datetime.now()
+    formatted_date = current_date.strftime("%y%m%d")
+
+    running_order_id =''
+    if max_order_id_str and formatted_date == max_order_id_str[:6]:
+        running_order_id = str(int(max_order_id_str) + 1)
+    else:
+        running_order_id = formatted_date + '001'
+
+    orderItemData = {
+        'location': location_dict,
+        'customer': customer_dict,
+        'item' : item_dict, 
+        'pay_method' : payment_methods_list,
+        'supplier' : supplier_dict,
+        'order_id' : max_order_id,
+        'formatted_date' : formatted_date,
+        'running_order_id': running_order_id,
+    }
+
+    return orderItemData
+
+
 def get_transection_item():
     transection_sale_dict = {}
     transection_buy_dict = {}
@@ -211,10 +300,10 @@ def get_transection_item():
         'customer': transection.customer.name,
         'supplier': transection.supplier.name,
         'item': transection.item.name,
+        'delivery_date': transection.delivery_date.strftime("%y-%m-%d"),
         #Customer part
         'target_location': transection.target_location.name,
         'receive_phone': transection.receive_phone,
-        'delivery_date': transection.delivery_date.strftime("%y-%m-%d"),
         'delivery_number': transection.delivery_number,
         'receive_name': transection.receive_name,
         'q_sale': str(transection.q_sale),
@@ -232,6 +321,63 @@ def get_transection_item():
         'customer': transection.customer.name,
         'supplier': transection.supplier.name,
         'item': transection.item.name,
+        'delivery_date': transection.delivery_date.strftime("%y-%m-%d"),
+        #Owner Part
+        'receive_location': transection.receive_location.name,
+        'q_buy': str(transection.q_buy),
+        'buy_price': str(transection.buy_price),
+        'delivery_price': str(transection.delivery_price),
+        'remark': transection.remark,
+        'buy_vat_id': transection.buy_vat_id,
+        'total_buy_amount': str(transection.total_buy_amount),
+        'buy_pay_method': transection.buy_pay_method,
+        'pay_date': transection.pay_date.strftime("%y-%m-%d"),
+    }
+
+
+
+    transectionData = {
+        'transection_sale': transection_sale_dict,
+        'transection_buy': transection_buy_dict,
+    }
+
+    return transectionData
+
+
+def get_transection_item_by_id(request_order_id):
+    transection_sale_dict = {}
+    transection_buy_dict = {}
+
+    transection_data = Order_Transection.objects.filter(order_id=request_order_id)
+
+    for transection in transection_data:
+        transection_sale_dict[transection.order_id] = {
+        'order_id': transection.order_id,
+        'customer': transection.customer.name,
+        'supplier': transection.supplier.name,
+        'item': transection.item.name,
+        'delivery_date': transection.delivery_date.strftime("%y-%m-%d"),
+        #Customer part
+        'target_location': transection.target_location.name,
+        'receive_phone': transection.receive_phone,
+        'delivery_number': transection.delivery_number,
+        'receive_name': transection.receive_name,
+        'q_sale': str(transection.q_sale),
+        'sale_price': str(transection.sale_price),
+        'total_sale_amount': str(transection.total_sale_amount),
+        'sale_pay_method' : transection.sale_pay_method,
+        'sale_vat_id': transection.sale_vat_id,
+        'delivery_number': transection.delivery_number,
+        'receive_date': transection.receive_date.strftime("%y-%m-%d"),
+    }
+        
+    for transection in transection_data:
+        transection_buy_dict[transection.order_id] = {
+        'order_id': transection.order_id,
+        'customer': transection.customer.name,
+        'supplier': transection.supplier.name,
+        'item': transection.item.name,
+        'delivery_date': transection.delivery_date.strftime("%y-%m-%d"),
         #Owner Part
         'receive_location': transection.receive_location.name,
         'q_buy': str(transection.q_buy),
