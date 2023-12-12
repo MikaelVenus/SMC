@@ -52,6 +52,7 @@
                             <th>นามผู้ค้า</th>
                             <th>ผู้ขนส่ง</th>
                             <th>วันที่ส่งสินค้า</th>
+                            <th>ชนิดสินค้า</th>
                             <th>ปริมาณที่ขาย(คิว)</th>
                             <th>จำนวนเงินที่ขาย</th>
                             <th>เลขที่ใบส่งของ</th>
@@ -64,35 +65,29 @@
                         </tr>
                     </thead>
                     <tbody id="sale_tbody">
-                        <tr>
+                        <!-- <tr>
                             <td>1</td>
                             <td><img src="{% static 'img/SM_badge.jpg' %}">SM_Badge</td>
                             <td>Seoul</td>
                             <td>17 dec 2022</td>
                             <td>Delivered</td>
                             <td>$128.9</td>
-                        </tr>
-                        <tr>
-                          <td>1</td>
-                          <td><img src="{% static 'img/SM_badge.jpg' %}">SM_Badge</td>
-                          <td>Seoul</td>
-                          <td>17 dec 2022</td>
-                          <td>Delivered</td>
-                          <td>$128.9</td>
-                        </tr>
-                        <tr>
-                          <td>1</td>
-                          <td><img src="{% static 'img/SM_badge.jpg' %}">SM_Badge</td>
-                          <td>Seoul</td>
-                          <td>17 dec 2022</td>
-                          <td>Delivered</td>
-                          <td>$128.9</td>
-                        </tr>
+                        </tr> -->
                     </tbody>
                 </table>
             </section>
           </main>
         </div>
+        <br>
+      </div>
+        <!--Begin col-->
+      </div>
+      <!--End row-->
+    </article>
+  </section>
+  <section>
+    <article>
+      <article>
         <h2>รวมรายการซื้อ</h2>
         <div class="column-100">
         <main class="table custom-table">
@@ -114,32 +109,21 @@
                           <th>หมายเหตุ</th>
                       </tr>
                   </thead>
-                  <tbody>
-                      <tr>
-                          <td>1</td>
-                          <td>SM_Badge</td>
-                          <td>Seoul</td>
-                          <td>17 dec 2022</td>
-                          <td>Delivered</td>
-                          <td>$128.9</td>
-                      </tr>
-                      <tr>
+                  <tbody id = 'buy_tbody'>
+                      <!-- <tr>
                         <td>1</td>
                         <td>SM_Badge</td>
                         <td>Seoul</td>
                         <td>17 dec 2022</td>
                         <td>Delivered</td>
                         <td>$128.9</td>
-                      </tr>
+                      </tr> -->
                   </tbody>
               </table>
           </section>
         </main>
       </div> 
-      </div>
-        <!--Begin col-->
-      </div>
-      <!--End row-->
+      </article>
     </article>
   </section>
 </form>
@@ -150,37 +134,21 @@
 
   });
 
-  tableSaleTemplate =  `
-                <td>${rowData.order_id}</td>
-                <td>${rowData.item}</td>
-                <td>${rowData.target_location}</td>
-                <td>${rowData.delivery_date}</td>
-                <td>Delivered</td>
-                <td>$${rowData.total_sale_amount}</td>
-            `;
-
-  tableBuyTemplate =  `
-      <td>${rowData.order_id}</td>
-      <td>${rowData.item}</td>
-      <td>${rowData.target_location}</td>
-      <td>${rowData.delivery_date}</td>
-      <td>Delivered</td>
-      <td>$${rowData.total_sale_amount}</td>
-  `;
-
   function viewTransection() {
     
     fetch("{% url 'transectionviews' %}")
       .then(r => r.json())
       .then(data => {
         console.log(data)
-        genTable(data.transection_sale, 'sale_tbody', tableSaleTemplate);
+      // tableSaleTemplate = getTableSaleTemplate();
+        genTable(data.transection_sale, 'sale_tbody', genRowSaleTemplate);
+        genTable(data.transection_buy, 'buy_tbody', genRowBuyTemplate);
         
       })
   }
 
 
-  function genTable(data, tableId, templateHtml) {
+  function genTable(data, tableId, genRowFunction) {
 
     // Get the table element where you want to append rows
     const table = document.getElementById(tableId);
@@ -192,13 +160,50 @@
             const tableRow = document.createElement('tr');
 
             // Adding table cell data
-            tableRow.innerHTML = templateHtml;
+            tableRow.innerHTML = genRowFunction(rowData);
 
             // Appending the created table row to the table
             table.appendChild(tableRow);
         }
     }
   }
+
+  function genRowSaleTemplate(rowData) {
+    return `
+        <td>${rowData.order_id}</td>
+        <td style='min-width:150px'>${rowData.customer}</td>
+        <td style='min-width:150px'>${rowData.supplier}</td>
+        <td style='min-width:70px'>${rowData.delivery_date}</td>
+        <td style='min-width:70px'>${rowData.item}</td>
+        <td>${rowData.q_sale}</td>
+        <td>${rowData.sale_price}฿</td>
+        <td style='min-width:150px'>${rowData.delivery_number}</td>
+        <td style='min-width:150px'>${rowData.sale_vat_id}</td>
+        <td>${rowData.total_sale_amount}</td>
+        <td>${rowData.sale_pay_method}</td>
+        <td style='min-width:70px'>${rowData.receive_date}</td>
+        <td>${rowData.receive_phone}</td>
+        <td>${rowData.receive_name}</td>
+    `;
+  }
+
+    function genRowBuyTemplate(rowData) {
+    return `
+        <td>${rowData.order_id}</td>
+        <td style='min-width:150px'>${rowData.customer}</td>
+        <td style='min-width:150px'>${rowData.supplier}</td>
+        <td style='min-width:70px'>${rowData.item}</td>
+        <td>${rowData.q_buy}</td>
+        <td>${rowData.delivery_price}฿</td>
+        <td>${rowData.buy_vat_id}</td>
+        <td style='min-width:150px'>${rowData.receive_location}</td>
+        <td style='min-width:150px'>${rowData.total_buy_amount}</td>
+        <td>${rowData.buy_pay_method}</td>
+        <td style='min-width:70px'>${rowData.pay_date}</td>
+        <td style='min-width:100px'>${rowData.remark}</td>
+    `;
+}
+
 
   
 </script>
