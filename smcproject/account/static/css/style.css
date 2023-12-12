@@ -362,8 +362,6 @@ footer p {
     backdrop-filter: blur(7px);
     box-shadow: 0 0.4rem 0.8rem #0005;
     border-radius: 0.8rem;
-
-    overflow: hidden;
     
 }
 
@@ -389,7 +387,7 @@ footer p {
     max-height: 89%;
     background-color: #fff4;
 
-    margin:  0.8rem auto;
+    margin:  0.7rem auto;
     border-radius: 0.6rem;
     overflow: auto;
 }
@@ -447,7 +445,7 @@ footer p {
 } 
 
 .custom-table table,th,td{
-    padding: 0.7rem;
+    padding: 0.6rem;
 }
 /* 
 .custom-table tbody tr:nth-child(even){

@@ -193,8 +193,16 @@ def transectionviews(request):
     #     form = TransectionForm(request.POST)
     #     if form.is_valid():
     #         form.save()
-    dropdownitem_json = json.dumps(get_transection_item())
+    dropdownitem_json = json.dumps(get_transection_item('all',''))
     return HttpResponse(dropdownitem_json, content_type='application/json')
+
+@csrf_exempt
+def transectionviewscriteria(request):
+    if request.method == 'POST':
+        data = json.load(request)
+
+        dropdownitem_json = json.dumps(get_transection_item('criteria',data))
+        return HttpResponse(dropdownitem_json, content_type='application/json')
 
 
 def get_order_item():
@@ -422,13 +430,39 @@ def get_edit_order_item():
 
 #     return transectionData
 
-def get_transection_item():
-    transection_sale_dict = {}
-    transection_buy_dict = {}
+def get_transection_item(mode,criteria):
     transection_total_sale_dict = {}
     transection_total_buy_dict = {}
 
-    transection_data = Order_Transection.objects.all().order_by('-order_id')
+    if mode =='all':
+        transection_data = Order_Transection.objects.all().order_by('-order_id')
+    else:
+        transection_data = Order_Transection.objects.all()
+
+        order_id = criteria['order_id']
+        customer_id = criteria['customer']
+        supplier = criteria['supplier']
+        delivery_date_from = criteria['delivery_date_from']
+        delivery_date_to = criteria['delivery_date_to']
+
+        # Check if supplier is not an empty string, then add it to the query filters
+        if supplier != '':
+            transection_data = transection_data.filter(supplier=supplier)
+
+        # Add other filters as needed (order_id and customer_id)
+        if order_id != '':
+            transection_data = transection_data.filter(order_id=order_id)
+        if customer_id != '':
+            transection_data = transection_data.filter(customer_id=customer_id)
+        if delivery_date_from != '':
+            transection_data = transection_data.filter(delivery_date__lte=convert_date_format_dmy_ymd(delivery_date_from))
+        if delivery_date_to != '':
+            delivery_date_to = transection_data.filter(delivery_date__gt=convert_date_format_dmy_ymd(delivery_date_to))
+
+        # Apply additional ordering
+        transection_data = transection_data.order_by('-order_id')
+    
+
     print(transection_data)
 
     transection_sale_list = [
@@ -451,7 +485,7 @@ def get_transection_item():
             'delivery_number': transection.delivery_number,
             'receive_date': transection.receive_date.strftime("%y-%m-%d"),
         }
-        for transection in Order_Transection.objects.all().order_by('-order_id')
+        for transection in transection_data
     ]
  
     transection_buy_list = [
@@ -473,7 +507,7 @@ def get_transection_item():
             'pay_date': transection.pay_date.strftime("%y-%m-%d"),
         }
         
-        for transection in Order_Transection.objects.all().order_by('-order_id')
+        for transection in transection_data
     ]
  
     total_q_sale = sum(float(item.get('q_sale', 0)) for item in transection_sale_list)

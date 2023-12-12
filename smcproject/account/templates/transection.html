@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% load static %}
 {% block content %}
-<link rel="stylesheet" type="text/css" href="{% static 'css/style_media1600.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'css1600.css' %}">
 <!-- <style>
   @media (max-width: 1600px) {
     section {
@@ -34,55 +34,109 @@
 <form method="POST" id="form">
   <section>
     <article>
-      <h2>รวมรายการจัดส่ง</h2>
+      <h2>เพิ่มรายการขาย(จัดส่ง)</h2>
       <!--Begin row-->
       <div class="row">
         <!--Begin col-->
         <div class="column-100">
             {% csrf_token %}
-          <main class="table custom-table">
-            <!-- <section class="table_header">
-              <h1>Customer's Orders</h1>
-            </section> -->
-            <section class="table_body">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>เลขที่รายการ</th>
-                            <th>นามผู้ค้า</th>
-                            <th>ผู้ขนส่ง</th>
-                            <th>วันที่ส่งสินค้า</th>
-                            <th>ชนิดสินค้า</th>
-                            <th>ปริมาณที่ขาย(คิว)</th>
-                            <th>จำนวนเงินที่ขาย</th>
-                            <th>เลขที่ใบส่งของ</th>
-                            <th>เลขที่ใบกำกับภาษีขาย</th>
-                            <th>ยอดรับเงิน(ขาย)</th>
-                            <th>วิธีรับเงิน:</th>
-                            <th>วันที่รับเงิน</th>
-                            <th>เบอร์หน้างาน:</th>
-                            <th>ผู้รับสินค้า:</th>
-                        </tr>
-                    </thead>
-                    <tbody id="sale_tbody">
-                        <!-- <tr>
-                            <td>1</td>
-                            <td><img src="{% static 'img/SM_badge.jpg' %}">SM_Badge</td>
-                            <td>Seoul</td>
-                            <td>17 dec 2022</td>
-                            <td>Delivered</td>
-                            <td>$128.9</td>
-                        </tr> -->
-                    </tbody>
-                </table>
-            </section>
-          </main>
+            <!-- <form method="POST" id="form"> -->
+              <!-- {% csrf_token %} -->
+            <div class="row">
+              <div class="column-npd">
+                <p>
+                  <label for="customer">นามผู้ค้า:</label>
+                  <select id="customer"></select>
+                </p>
+              </div>
+              <div class="column-npd">
+                <p>
+                  <label for="order_id">เลขที่รายการ:</label>
+                  <input type="text" placeholder="order id" maxlength="200" required="" id="order_id">
+                </p>
+              </div>
+              <div class="column-npd">
+                <p>
+                  <label for="supplier">ผู้ขนส่ง(supplier):</label>
+                  <select id="supplier"></select>
+                </p>
+              </div>
+              <div class="column-npd">
+                <p>
+                  <label for="delivery_date_from">วันที่ส่งสินค้าตั้งเเต่:</label>
+                  <input type="text" placeholder="Delivery Date From" maxlength="200" required="" id="delivery_date_from" name="delivery_date">
+                </p>
+              </div>
+              <div class="column-npd">
+                <p>
+                  <label for="delivery_date_to">วันที่ส่งสินค้าถึง:</label>
+                  <input type="text" placeholder="Delivery Date To" maxlength="200" required="" id="delivery_date_to" name="delivery_date">
+                </p>
+              </div>
+            </div>
+            <!-- <div class="row">
+            </div> -->
+          </div>
+          <!--Begin col-->
         </div>
-        <br>
       </div>
-        <!--Begin col-->
-      </div>
-      <!--End row-->
+        <!--End row-->
+    </article>
+  </section>
+  <section>
+    <article>
+      <article>
+        <h2>รวมรายการจัดส่ง</h2>
+        <!--Begin row-->
+        <div class="row">
+          <!--Begin col-->
+          <div class="column-100">
+              {% csrf_token %}
+            <main class="table custom-table">
+              <!-- <section class="table_header">
+                <h1>Customer's Orders</h1>
+              </section> -->
+              <section class="table_body">
+                  <table>
+                      <thead>
+                          <tr>
+                              <th>เลขที่รายการ</th>
+                              <th>นามผู้ค้า</th>
+                              <th>ผู้ขนส่ง</th>
+                              <th>วันที่ส่งสินค้า</th>
+                              <th>ชนิดสินค้า</th>
+                              <th>ปริมาณที่ขาย(คิว)</th>
+                              <th>จำนวนเงินที่ขาย</th>
+                              <th>เลขที่ใบส่งของ</th>
+                              <th>เลขที่ใบกำกับภาษีขาย</th>
+                              <th>สถานที่จัดส่ง:</th>
+                              <th>ยอดรับเงิน(ขาย)</th>
+                              <th>วิธีรับเงิน:</th>
+                              <th>วันที่รับเงิน</th>
+                              <th>เบอร์หน้างาน:</th>
+                              <th>ผู้รับสินค้า:</th>
+                          </tr>
+                      </thead>
+                      <tbody id="sale_tbody">
+                          <!-- <tr>
+                              <td>1</td>
+                              <td><img src="{% static 'img/SM_badge.jpg' %}">SM_Badge</td>
+                              <td>Seoul</td>
+                              <td>17 dec 2022</td>
+                              <td>Delivered</td>
+                              <td>$128.9</td>
+                          </tr> -->
+                      </tbody>
+                  </table>
+              </section>
+            </main>
+          </div>
+          <br>
+        </div>
+          <!--Begin col-->
+        </div>
+        <!--End row-->
+      </article>
     </article>
   </section>
   <section>
@@ -131,8 +185,17 @@
 
 <script>
   $(function() {
-    viewTransection()
+    $("#delivery_date_from").datepicker({
+      dateFormat: 'dd-mm-yy' // Specify the date format as day-month-year
+    });
 
+    $("#delivery_date_to").datepicker({
+      dateFormat: 'dd-mm-yy' // Specify the date format as day-month-year
+    });
+
+    viewTransection()
+    getorderitem()
+    runOnBlur('customer',viewTransectionByInput)
   });
 
   function viewTransection() {
@@ -148,6 +211,31 @@
         genLastRowBuyTemplate(data.transection_total_buy, 'buy_tbody')
       })
   }
+
+  function viewTransectionByInput() {
+    const formdata = {
+      order_id : document.getElementById('order_id').value,
+      customer : document.getElementById('customer').value,
+      supplier : document.getElementById('supplier').value,
+      delivery_date_from : document.getElementById('delivery_date_from').value,
+      delivery_date_to : document.getElementById('delivery_date_to').value,
+    }
+
+      fetch("{% url 'transectionviewscriteria' %}", { method: 'post', body: JSON.stringify(formdata) })
+      .then(r => r.json())
+      .then(data => {
+        console.log(data)
+        clearTable();
+        genTable(data.transection_sale, 'sale_tbody', genRowSaleTemplate);
+        genTable(data.transection_buy, 'buy_tbody', genRowBuyTemplate);
+        genLastRowSaleTemplate(data.transection_total_sale, 'sale_tbody')
+        genLastRowBuyTemplate(data.transection_total_buy, 'buy_tbody')
+      })
+      .catch(error => {
+        console.error('There was a problem with the fetch operation:', error);
+      });
+  }
+
 
 
   function genTable(data, tableId, genRowFunction) {
@@ -170,40 +258,87 @@
     }
   }
 
+  function clearTable() {
+    const tableSale = document.getElementById('sale_tbody');
+    const tableBuy = document.getElementById('buy_tbody');
+    // Clear all rows within the table
+    tableSale.innerHTML = ''
+    tableBuy.innerHTML = ''
+  }
+
   function genRowSaleTemplate(rowData) {
     return `
         <td>${rowData.order_id}</td>
-        <td style='min-width:150px'>${rowData.customer}</td>
-        <td style='min-width:150px'>${rowData.supplier}</td>
-        <td style='min-width:70px'>${rowData.delivery_date}</td>
-        <td style='min-width:70px'>${rowData.item}</td>
+        <td style='min-width:50px'>${rowData.customer}</td>
+        <td style='min-width:50px'>${rowData.supplier}</td>
+        <td style='min-width:50px'>${rowData.delivery_date}</td>
+        <td style='min-width:50px'>${rowData.item}</td>
         <td>${rowData.q_sale}</td>
         <td>${rowData.sale_price}฿</td>
-        <td style='min-width:150px'>${rowData.delivery_number}</td>
-        <td style='min-width:150px'>${rowData.sale_vat_id}</td>
+        <td style='min-width:50px'>${rowData.delivery_number}</td>
+        <td style='min-width:50px'>${rowData.sale_vat_id}</td>
+        <td style='min-width:50px'>${rowData.target_location}</td>
         <td>${rowData.total_sale_amount}</td>
         <td>${rowData.sale_pay_method}</td>
-        <td style='min-width:70px'>${rowData.receive_date}</td>
+        <td style='min-width:50px'>${rowData.receive_date}</td>
         <td>${rowData.receive_phone}</td>
         <td>${rowData.receive_name}</td>
     `;
     }
 
-    function genRowBuyTemplate(rowData) {
+    // function genRowSaleTemplate(rowData) {
+    // return `
+    //     <td>${rowData.order_id}</td>
+    //     <td >${rowData.customer}</td>
+    //     <td >${rowData.supplier}</td>
+    //     <td >${rowData.delivery_date}</td>
+    //     <td >${rowData.item}</td>
+    //     <td>${rowData.q_sale}</td>
+    //     <td>${rowData.sale_price}฿</td>
+    //     <td>${rowData.delivery_number}</td>
+    //     <td>${rowData.sale_vat_id}</td>
+    //     <td>${rowData.target_location}</td>
+    //     <td>${rowData.total_sale_amount}</td>
+    //     <td>${rowData.sale_pay_method}</td>
+    //     <td style='min-width:50px'>${rowData.receive_date}</td>
+    //     <td>${rowData.receive_phone}</td>
+    //     <td>${rowData.receive_name}</td>
+    // `;
+    // }
+
+  //   function genRowBuyTemplate(rowData) {
+  //   return `
+  //       <td>${rowData.order_id}</td>
+  //       <td style='min-width:50px'>${rowData.customer}</td>
+  //       <td style='min-width:50px'>${rowData.supplier}</td>
+  //       <td style='min-width:50px'>${rowData.delivery_date}</td>
+  //       <td style='min-width:50px'>${rowData.item}</td>
+  //       <td>${rowData.q_buy}</td>
+  //       <td>${rowData.delivery_price}฿</td>
+  //       <td>${rowData.buy_vat_id}</td>
+  //       <td style='min-width:50px'>${rowData.receive_location}</td>
+  //       <td style='min-width:50px'>${rowData.total_buy_amount}</td>
+  //       <td>${rowData.buy_pay_method}</td>
+  //       <td style='min-width:50px'>${rowData.pay_date}</td>
+  //       <td style='min-width:50px'>${rowData.remark}</td>
+  //   `;
+  // }
+
+  function genRowBuyTemplate(rowData) {
     return `
         <td>${rowData.order_id}</td>
-        <td style='min-width:150px'>${rowData.customer}</td>
-        <td style='min-width:150px'>${rowData.supplier}</td>
-        <td style='min-width:70px'>${rowData.delivery_date}</td>
-        <td style='min-width:70px'>${rowData.item}</td>
+        <td>${rowData.customer}</td>
+        <td>${rowData.supplier}</td>
+        <td>${rowData.delivery_date}</td>
+        <td>${rowData.item}</td>
         <td>${rowData.q_buy}</td>
         <td>${rowData.delivery_price}฿</td>
         <td>${rowData.buy_vat_id}</td>
-        <td style='min-width:150px'>${rowData.receive_location}</td>
-        <td style='min-width:150px'>${rowData.total_buy_amount}</td>
+        <td>${rowData.receive_location}</td>
+        <td>${rowData.total_buy_amount}</td>
         <td>${rowData.buy_pay_method}</td>
-        <td style='min-width:70px'>${rowData.pay_date}</td>
-        <td style='min-width:100px'>${rowData.remark}</td>
+        <td>${rowData.pay_date}</td>
+        <td>${rowData.remark}</td>
     `;
   }
 
@@ -265,6 +400,63 @@
 
     // Append the newly created row to the table
     table.appendChild(newRow);
+  }
+
+  function getorderitem() {
+    
+    fetch("{% url 'orderitemviews' %}")
+      .then(r => r.json())
+      .then(data => {
+        console.log(data)
+        populateDropdown(data.pay_method, 'sale_pay_method')
+        populateDropdown(data.pay_method, 'buy_pay_method')
+        populateDropdown(data.customer, 'customer')
+        populateDropdown(data.customer, 'customer_b')
+        populateDropdown(data.item, 'item')
+        populateDropdown(data.item, 'item_b')
+        populateDropdown(data.supplier, 'supplier')
+        populateDropdown(data.supplier, 'supplier_b')
+        populateDropdown(data.location, 'target_location')
+        populateDropdown(data.location, 'receive_location')
+
+        synchronizeDropdowns('#customer','#customer_b')
+        synchronizeDropdowns('#customer_b','#customer')
+        // synchronizeDropdowns('#supplier','#supplier_b')
+        // synchronizeDropdowns('#supplier_b','#supplier')
+        synchronizeDropdowns('#item','#item_b')
+        synchronizeDropdowns('#item_b','#item')
+
+        $('#order_id').val(data.running_order_id);
+        $('#order_id_b').val(data.running_order_id);
+      })
+  }
+
+  
+  function populateDropdown(data, dropdownId) {
+    let dropdown = $('#' + dropdownId);
+    
+    // Loop through the data and append options to the dropdown
+    $.each(data, function(index, item) {
+        dropdown.append($('<option></option>').attr('value', item.id).text(item.name));
+    });
+  }
+
+  function synchronizeDropdowns(sourceId, targetId) {
+    $(sourceId).on('change', function() {
+        var selectedId = $(this).val();
+
+        // Set the selected value in the target dropdown to match the selected value in the source dropdown
+        $(targetId).val(selectedId);
+    });
+
+    // Trigger change event on page load to initialize the target dropdown based on the default value of the source dropdown
+    $(sourceId).trigger('change');
+  }
+
+  function runOnBlur(dropdownId, func) {
+    $("#" + dropdownId).on("blur", function() {
+      func($(this).val());
+    });
   }
 
   
