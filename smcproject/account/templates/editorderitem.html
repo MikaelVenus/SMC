@@ -249,6 +249,9 @@
     </div>
     <div class="row">
       <div class="column-npd" style="display: flex; justify-content: flex-end;">
+        <button type="button" class="custom_button_del" id="delete_button">Delete Order</button>
+      </div>
+      <div class="column-npd" style="display: flex; justify-content: flex-end;">
         <button type="button" id="reserve_button">Edit Order</button>
       </div>
     </div>
@@ -283,11 +286,19 @@
     formatToDecimal('total_buy_amount')
 
     $('#reserve_button').hide()
-    // geteditorderitem();
+    $('#delete_button').hide()
+
+    
+    $('#reserve_button').click(function(e) {
+      sendFormData('EDIT');
+    });
+
+    $('#delete_button').click(function(e) {
+      sendFormData('DELETE');
+    });
   });
 
-
-  document.getElementById('reserve_button').addEventListener('click', function (e) {
+  function sendFormData(mode){
     const formdata = {
       order_id : document.getElementById('order_id').value,
       customer : document.getElementById('customer').value,
@@ -312,7 +323,8 @@
       buy_vat_id : document.getElementById('buy_vat_id').value,     
       total_buy_amount : document.getElementById('total_buy_amount').value,     
       buy_pay_method : document.getElementById('buy_pay_method').value,     
-      pay_date : document.getElementById('pay_date').value,     
+      pay_date : document.getElementById('pay_date').value,   
+      Mode : mode,   
     }
     console.log(formdata)
     errormessage=validateForm(formdata); 
@@ -345,7 +357,8 @@
         // clearData();
       });
         }
-  })
+
+  }
 
 
   /*  Step 10: Part two */
@@ -397,9 +410,11 @@
         console.log(data);
         if ($.isEmptyObject(data.transection_buy) || $.isEmptyObject(data.transection_sale)){
           $('#reserve_button').hide();
+          $('#delete_button').hide();
         }
         else{
           $('#reserve_button').show();
+          $('#delete_button').show();
           console.log(data.transection_buy[0].customer)
           $('#customer').val(data.transection_sale[0].customer)
           $('#supplier').val(data.transection_sale[0].supplier)
@@ -501,6 +516,7 @@
 
 
   function clearData(){
+    $('#order_id').val('')
     $('#customer').val('1')
     $('#supplier').val('1')
     $('#delivery_date').val('')

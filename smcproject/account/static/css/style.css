@@ -195,6 +195,48 @@ textarea {
     background-color: #023020;
   }
 
+ .custom_button {
+    padding: .5rem 1rem;
+    border: 1px solid #495E57;
+    background-color:#495E57;;
+    border-radius: 5px;
+    width: 85%;
+    font-size: 1.25rem;
+    display: block;
+    color: #fff;
+    line-height: 35px;
+  }
+
+.custom_button:active {
+    transform: scale(0.95); /* Reduces button size slightly on click */
+    /* You can add other visual effects for click if needed */
+  }
+
+  .custom_button:hover {
+    background-color: #023020;
+  }
+
+  .custom_button_del {
+    padding: .5rem 1rem;
+    border: 1px solid #ec8c1d;
+    background-color:#ee1d02;;
+    border-radius: 5px;
+    width: 85%;
+    font-size: 1.25rem;
+    display: block;
+    color: #fff;
+    line-height: 35px;
+  }
+
+.custom_button_del:active {
+    transform: scale(0.95); /* Reduces button size slightly on click */
+    /* You can add other visual effects for click if needed */
+  }
+
+  .custom_button_del:hover {
+    background-color: #610505;
+  }
+
 
 #errmsg {
     color: rgb(204, 48, 5);

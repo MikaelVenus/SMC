@@ -131,48 +131,57 @@ def editordering(request):
     if request.method == 'POST':
         data = json.load(request)
 
-        customer_instance_update = Customer.objects.filter(customer_id=data['customer']).first()
-        supplier_instance_update = Supplier.objects.filter(supplier_id=data['supplier']).first()
-        item_instance_update = Item.objects.filter(item_id=data['item']).first()
-        target_location_instance_update = Location.objects.filter(location_id=data['target_location']).first()
-        receive_location_instance_update = Location.objects.filter(location_id=data['receive_location']).first()
-        
-        # date = request.GET.get('date',datetime.today().date())
-        print(customer_instance_update)
-        # Retrieve the existing object based on order_id or return 404 if not found
-        order_transection_instance = get_object_or_404(Order_Transection, order_id=data['order_id'])
+        if data['Mode']=='EDIT':
+            customer_instance_update = Customer.objects.filter(customer_id=data['customer']).first()
+            supplier_instance_update = Supplier.objects.filter(supplier_id=data['supplier']).first()
+            item_instance_update = Item.objects.filter(item_id=data['item']).first()
+            target_location_instance_update = Location.objects.filter(location_id=data['target_location']).first()
+            receive_location_instance_update = Location.objects.filter(location_id=data['receive_location']).first()
+            
+            # date = request.GET.get('date',datetime.today().date())
+            print(customer_instance_update)
+            # Retrieve the existing object based on order_id or return 404 if not found
+            order_transection_instance = get_object_or_404(Order_Transection, order_id=data['order_id'])
 
-        # Update the fields of the existing object
-        order_transection_instance.customer = customer_instance_update
-        order_transection_instance.supplier = supplier_instance_update
-        order_transection_instance.item = item_instance_update
-        order_transection_instance.target_location = target_location_instance_update
-        order_transection_instance.receive_phone = data['receive_phone']
-        order_transection_instance.delivery_date = convert_date_format_dmy_ymd(data['delivery_date'])
-        order_transection_instance.delivery_number = data['delivery_number']
-        order_transection_instance.receive_name = data['receive_name']
-        order_transection_instance.q_sale = data['q_sale']
-        order_transection_instance.sale_price = data['sale_price']
-        order_transection_instance.total_sale_amount = data['total_sale_amount']
-        order_transection_instance.sale_pay_method = data['sale_pay_method']    
-        order_transection_instance.sale_vat_id = data['sale_vat_id']
-        order_transection_instance.receive_date = convert_date_format_dmy_ymd(data['receive_date'])
-        order_transection_instance.receive_location = receive_location_instance_update
-        order_transection_instance.q_buy = data['q_buy']
-        order_transection_instance.buy_price = data['buy_price']
-        order_transection_instance.delivery_price = data['delivery_price']
-        order_transection_instance.remark = data['remark']
-        order_transection_instance.buy_vat_id = data['buy_vat_id']
-        order_transection_instance.total_buy_amount = data['total_buy_amount']
-        order_transection_instance.buy_pay_method = data['buy_pay_method']
-        order_transection_instance.pay_date = convert_date_format_dmy_ymd(data['pay_date'])   
+            # Update the fields of the existing object
+            order_transection_instance.customer = customer_instance_update
+            order_transection_instance.supplier = supplier_instance_update
+            order_transection_instance.item = item_instance_update
+            order_transection_instance.target_location = target_location_instance_update
+            order_transection_instance.receive_phone = data['receive_phone']
+            order_transection_instance.delivery_date = convert_date_format_dmy_ymd(data['delivery_date'])
+            order_transection_instance.delivery_number = data['delivery_number']
+            order_transection_instance.receive_name = data['receive_name']
+            order_transection_instance.q_sale = data['q_sale']
+            order_transection_instance.sale_price = data['sale_price']
+            order_transection_instance.total_sale_amount = data['total_sale_amount']
+            order_transection_instance.sale_pay_method = data['sale_pay_method']    
+            order_transection_instance.sale_vat_id = data['sale_vat_id']
+            order_transection_instance.receive_date = convert_date_format_dmy_ymd(data['receive_date'])
+            order_transection_instance.receive_location = receive_location_instance_update
+            order_transection_instance.q_buy = data['q_buy']
+            order_transection_instance.buy_price = data['buy_price']
+            order_transection_instance.delivery_price = data['delivery_price']
+            order_transection_instance.remark = data['remark']
+            order_transection_instance.buy_vat_id = data['buy_vat_id']
+            order_transection_instance.total_buy_amount = data['total_buy_amount']
+            order_transection_instance.buy_pay_method = data['buy_pay_method']
+            order_transection_instance.pay_date = convert_date_format_dmy_ymd(data['pay_date'])   
 
-        order_transection_instance.save()
+            order_transection_instance.save()
 
-        data = {
-            'SuccessMsg':'Success',
-            'errMsg':'',
-        }
+            data = {
+                'SuccessMsg':'Edit Success',
+                'errMsg':'',
+            }
+        elif data['Mode'] == 'DELETE':
+            order_transection_instance = Order_Transection.objects.filter(order_id=data['order_id']).first()
+            order_transection_instance.delete()
+
+            data = {
+                'SuccessMsg':'Delete Success',
+                'errMsg':'',
+            }
 
         order_item_json = json.dumps(data)
         return HttpResponse(order_item_json, content_type='application/json')
@@ -348,87 +357,6 @@ def get_edit_order_item():
 
     return orderItemData
 
-
-# def get_transection_item():
-#     transection_sale_dict = {}
-#     transection_buy_dict = {}
-#     transection_total_sale_dict = {}
-#     transection_total_buy_dict = {}
-
-#     transection_data = Order_Transection.objects.all().order_by('-order_id')
-#     print(transection_data)
-
-#     for transection in transection_data:
-#         transection_sale_dict[transection.order_id] = {
-#         'order_id': transection.order_id,
-#         'customer': transection.customer.name,
-#         'supplier': transection.supplier.name,
-#         'item': transection.item.name,
-#         'delivery_date': transection.delivery_date.strftime("%y-%m-%d"),
-#         #Customer part
-#         'target_location': transection.target_location.name,
-#         'receive_phone': transection.receive_phone,
-#         'delivery_number': transection.delivery_number,
-#         'receive_name': transection.receive_name,
-#         'q_sale': str(transection.q_sale),
-#         'sale_price': str(transection.sale_price),
-#         'total_sale_amount': str(transection.total_sale_amount),
-#         'sale_pay_method' : transection.sale_pay_method,
-#         'sale_vat_id': transection.sale_vat_id,
-#         'delivery_number': transection.delivery_number,
-#         'receive_date': transection.receive_date.strftime("%y-%m-%d"),
-#     }
-        
-#     for transection in transection_data:
-#         transection_buy_dict[transection.order_id] = {
-#         'order_id': transection.order_id,
-#         'customer': transection.customer.name,
-#         'supplier': transection.supplier.name,
-#         'item': transection.item.name,
-#         'delivery_date': transection.delivery_date.strftime("%y-%m-%d"),
-#         #Owner Part
-#         'receive_location': transection.receive_location.name,
-#         'q_buy': str(transection.q_buy),
-#         'buy_price': str(transection.buy_price),
-#         'delivery_price': str(transection.delivery_price),
-#         'remark': transection.remark,
-#         'buy_vat_id': transection.buy_vat_id,
-#         'total_buy_amount': str(transection.total_buy_amount),
-#         'buy_pay_method': transection.buy_pay_method,
-#         'pay_date': transection.pay_date.strftime("%y-%m-%d"),
-#     }
-        
-#     total_q_sale = 0 
-#     total_sale_amount = 0 
-#     for transaction_id, transaction_data in transection_sale_dict.items():
-#         total_q_sale += float(transaction_data.get('q_sale', 0))
-#         total_sale_amount += float(transaction_data.get('total_sale_amount', 0)) 
-    
-#     total_q_buy = 0 
-#     total_buy_amount = 0 
-#     for transaction_id, transaction_data in transection_buy_dict.items():
-#         total_q_buy += float(transaction_data.get('q_buy', 0)) 
-#         total_buy_amount += float(transaction_data.get('total_buy_amount', 0)) 
-    
-
-#     transection_total_sale_dict = {
-#         'q_sale':total_q_sale,
-#         'total_sale_amount':total_sale_amount,
-#     }
-
-#     transection_total_buy_dict = {
-#         'q_buy':total_q_buy,
-#         'total_buy_amount':total_buy_amount,
-#     }
-
-#     transectionData = {
-#         'transection_sale': transection_sale_dict,
-#         'transection_buy': transection_buy_dict,
-#         'transection_total_sale': transection_total_sale_dict,
-#         'transection_total_buy': transection_total_buy_dict,
-#     }
-
-#     return transectionData
 
 def get_transection_item(mode,criteria):
     transection_total_sale_dict = {}

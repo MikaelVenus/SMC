@@ -34,7 +34,6 @@
 <form method="POST" id="form">
   <section>
     <article>
-      <h2>เพิ่มรายการขาย(จัดส่ง)</h2>
       <!--Begin row-->
       <div class="row">
         <!--Begin col-->
@@ -196,6 +195,10 @@
     viewTransection()
     getorderitem()
     runOnBlur('customer',viewTransectionByInput)
+    runOnBlur('order_id',viewTransectionByInput)
+    runOnBlur('supplier',viewTransectionByInput)
+    runOnBlur('delivery_date_from',viewTransectionByInput)
+    runOnBlur('delivery_date_to',viewTransectionByInput)
   });
 
   function viewTransection() {
