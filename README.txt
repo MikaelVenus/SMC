@@ -7,6 +7,7 @@
  -[cd smcvenv]
  -[cd Scripts]
  -[activate]
+ or -[.venv\Scripts\activate] in CMD
 
 4) Install package
  -back to project directory smcproject
