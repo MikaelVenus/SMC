@@ -356,17 +356,18 @@
     // Create and set HTML content for the new row
     newRow.innerHTML = `
         <td>รวม</td>
-        <td style='min-width:150px'></td>
-        <td style='min-width:150px'></td>
-        <td style='min-width:70px'></td>
-        <td style='min-width:70px'></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
         <td>${qSale}</td>
         <td></td>
-        <td style='min-width:150px'></td>
-        <td style='min-width:150px'></td>
+        <td></td>
+        <td></td>
+        <td></td>
         <td>${totalSaleAmount}</td>
         <td></td>
-        <td style='min-width:70px'></td>
+        <td></td>
         <td></td>
         <td></td>
     `;
@@ -376,7 +377,7 @@
   }
 
 
-  function genLastRowBuyTemplate(rowData,tableId) {
+  function genLastRowBuyTemplate(rowData,tableId, requestInnerHTML) {
     const q_buy = rowData.q_buy;
     const totalBuyAmount = rowData.total_buy_amount;
     const table = document.getElementById(tableId);
@@ -387,17 +388,17 @@
     // Create and set HTML content for the new row
     newRow.innerHTML = `
         <td>รวม</td>
-        <td style='min-width:150px'></td>
-        <td style='min-width:150px'></td>
-        <td style='min-width:70px'></td>
-        <td style='min-width:70px'></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
         <td>${q_buy}</td>
         <td></td>
-        <td style='min-width:150px'></td>
-        <td style='min-width:150px'></td>
+        <td></td>
+        <td></td>
         <td>${totalBuyAmount}</td>
         <td></td>
-        <td style='min-width:70px'></td>
+        <td></td>
         <td></td>
     `;
 
