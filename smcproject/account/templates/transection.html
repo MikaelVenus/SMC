@@ -44,8 +44,9 @@
             <div class="row">
               <div class="column-npd">
                 <p>
-                  <label for="customer">นามผู้ค้า:</label>
-                  <select id="customer"></select>
+                  <label for="customerInput">นามผู้ค้า:</label>
+                  <input type="text" list="customerList" id="customerInput" />
+                  <datalist id="customerList"></datalist>
                 </p>
               </div>
               <div class="column-npd">
@@ -56,8 +57,11 @@
               </div>
               <div class="column-npd">
                 <p>
-                  <label for="supplier">ผู้ขนส่ง(supplier):</label>
-                  <select id="supplier"></select>
+                  <!-- <label for="supplier">ผู้ขนส่ง(supplier):</label>
+                  <select id="supplier"></select> -->
+                  <label for="supplierInput">ผู้ขนส่ง(supplier):</label>
+                  <input type="text" list="supplierList" id="supplierInput" />
+                  <datalist id="supplierList"></datalist>
                 </p>
               </div>
               <div class="column-npd">
@@ -194,9 +198,10 @@
 
     viewTransection()
     getorderitem()
-    runOnBlur('customer',viewTransectionByInput)
+    // runOnBlur('customerInput',viewTransectionByInput)
+    $('#customerInput').on('blur', viewTransectionByInput);
     runOnBlur('order_id',viewTransectionByInput)
-    runOnBlur('supplier',viewTransectionByInput)
+    runOnBlur('supplierInput',viewTransectionByInput)
     runOnBlur('delivery_date_from',viewTransectionByInput)
     runOnBlur('delivery_date_to',viewTransectionByInput)
   });
@@ -218,8 +223,8 @@
   function viewTransectionByInput() {
     const formdata = {
       order_id : document.getElementById('order_id').value,
-      customer : document.getElementById('customer').value,
-      supplier : document.getElementById('supplier').value,
+      customer : getIdFromValue(document.getElementById('customerInput').value, 'customerList'),
+      supplier :  getIdFromValue(document.getElementById('supplierInput').value, 'supplierList'),
       delivery_date_from : document.getElementById('delivery_date_from').value,
       delivery_date_to : document.getElementById('delivery_date_to').value,
     }
@@ -309,23 +314,20 @@
     // `;
     // }
 
-  //   function genRowBuyTemplate(rowData) {
-  //   return `
-  //       <td>${rowData.order_id}</td>
-  //       <td style='min-width:50px'>${rowData.customer}</td>
-  //       <td style='min-width:50px'>${rowData.supplier}</td>
-  //       <td style='min-width:50px'>${rowData.delivery_date}</td>
-  //       <td style='min-width:50px'>${rowData.item}</td>
-  //       <td>${rowData.q_buy}</td>
-  //       <td>${rowData.delivery_price}฿</td>
-  //       <td>${rowData.buy_vat_id}</td>
-  //       <td style='min-width:50px'>${rowData.receive_location}</td>
-  //       <td style='min-width:50px'>${rowData.total_buy_amount}</td>
-  //       <td>${rowData.buy_pay_method}</td>
-  //       <td style='min-width:50px'>${rowData.pay_date}</td>
-  //       <td style='min-width:50px'>${rowData.remark}</td>
-  //   `;
-  // }
+    function getIdFromValue(value, dataListId) {
+      let selectedId = null;
+      let dataList = $('#' + dataListId);
+
+      // Find the option whose value matches the provided value
+      let selectedOption = dataList.find('option[value="' + value + '"]');
+      
+      // If a matching option is found, extract its associated ID
+      if (selectedOption.length) {
+          selectedId = selectedOption.attr('data-id');
+      }
+      
+      return selectedId;
+  }
 
   function genRowBuyTemplate(rowData) {
     return `
@@ -414,11 +416,11 @@
         console.log(data)
         populateDropdown(data.pay_method, 'sale_pay_method')
         populateDropdown(data.pay_method, 'buy_pay_method')
-        populateDropdown(data.customer, 'customer')
+        populateList(data.customer, 'customer')
         populateDropdown(data.customer, 'customer_b')
         populateDropdown(data.item, 'item')
         populateDropdown(data.item, 'item_b')
-        populateDropdown(data.supplier, 'supplier')
+        populateList(data.supplier, 'supplier')
         populateDropdown(data.supplier, 'supplier_b')
         populateDropdown(data.location, 'target_location')
         populateDropdown(data.location, 'receive_location')
@@ -443,6 +445,54 @@
     $.each(data, function(index, item) {
         dropdown.append($('<option></option>').attr('value', item.id).text(item.name));
     });
+  }
+
+  function populateList(data, id) {
+    let dataList = $('#' + id + 'List');
+    let inputElement = $('#' + id + 'Input');
+
+    // Clear any existing options in the datalist
+    dataList.empty();
+
+    // Loop through the data and append options to the datalist
+    $.each(data, function(index, item) {
+        dataList.append($('<option></option>').attr('value', item.name).attr('data-id', item.id)); // Assign data-id attribute with the ID
+    });
+
+    // Handle input event to update input value based on selected option
+    inputElement.on('input', function() {
+        let selectedOption = dataList.find('option[value="' + $(this).val() + '"]');
+        if (selectedOption.length) {
+            let selectedId = selectedOption.attr('data-id'); // Get ID from data-id attribute
+            $(this).attr('data-selected-id', selectedId); // Store selected ID as data attribute
+        } else {
+            $(this).attr('data-selected-id', ''); // Clear stored ID if input doesn't match any option
+        }
+    });
+
+    // // Handle blur event to set input value to name if not a valid ID
+    // inputElement.on('blur', function() {
+    //     let selectedId = $(this).attr('data-selected-id');
+    //     if (!selectedId) {
+    //         $(this).val(''); // Clear input value if not a valid ID
+    //     }
+    // });
+}
+
+  function populateDataList(data, inputId, dataListId) {
+      let inputElement = $('#' + inputId);
+      let dataList = $('#' + dataListId);
+
+      // Clear any existing options in the datalist
+      dataList.empty();
+
+      // Loop through the data and append options to the datalist
+      $.each(data, function(index, item) {
+          dataList.append($('<option></option>').attr('value', item.name));
+      });
+
+      // Link the input element with the datalist
+      inputElement.attr('list', dataListId);
   }
 
   function synchronizeDropdowns(sourceId, targetId) {

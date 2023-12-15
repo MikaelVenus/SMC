@@ -373,14 +373,15 @@ def get_transection_item(mode,criteria):
         delivery_date_from = criteria['delivery_date_from']
         delivery_date_to = criteria['delivery_date_to']
 
-        # Check if supplier is not an empty string, then add it to the query filters
-        if supplier != '':
-            transection_data = transection_data.filter(supplier=supplier)
 
+        # Check if supplier is not an empty string, then add it to the query filters
+        if supplier != '' and supplier is not None:
+            transection_data = transection_data.filter(supplier=supplier)
+            print(customer_id)
         # Add other filters as needed (order_id and customer_id)
         if order_id != '':
             transection_data = transection_data.filter(order_id=order_id)
-        if customer_id != '':
+        if customer_id != '' and customer_id is not None:
             transection_data = transection_data.filter(customer_id=customer_id)
         if delivery_date_from != '':
             transection_data = transection_data.filter(delivery_date__lte=convert_date_format_dmy_ymd(delivery_date_from))
